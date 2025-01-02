@@ -1,0 +1,20 @@
+{
+    "name": "Ennore in Chennai",
+    "slug": "karez",
+    "layers": [{
+        "name": "Karez main line",
+        "url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Akarez&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+        "visible": true
+    },
+    {
+        "name": "Googel Footprints",
+        "url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Agoogle-footprints&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+        "visible": true
+    },
+    {
+        "name": "annotation",
+        "url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3annotations_polygons&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+        "visible": true
+    }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "name": "The Naubad Karez",
+    "slug": "karez",
+    "zoom": 13,
+    "center": [77.472839,17.934409],
+    "layers": [{
+        "name": "Karez main line",
+        "url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Akarez&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+        "visible": true
+    },
+    {
+        "name": "Google Footprints",
+        "url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Agoogle-footprints&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+        "visible": true
+    },
+    {
+        "name": "annotation",
+        "url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Aannotations_polygons&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+        "visible": true
+    },
+    {
+        "name": "Cadastral",
+        "url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Acadastral&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+        "visible": true
+    },
+    {
+        "name": "Stepwells",
+        "url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Astepwells&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+        "visible": true
+    },
+    {
+        "name": "Taluka Boundary",
+        "url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Ataluka&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+        "visible": true
+    }
+    ]
+}

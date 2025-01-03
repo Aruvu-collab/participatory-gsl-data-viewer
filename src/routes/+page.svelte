@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LeftBar from '$lib/LeftBar.svelte';
 </script>
 
 <div class="grid grid-cols-10 gap-20 p-10">

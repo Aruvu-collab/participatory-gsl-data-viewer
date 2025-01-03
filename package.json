@@ -1,6 +1,5 @@
 {
-	"name": "frontend",
-	"private": true,
+	"name": "PGSL-visual-data-repository",
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
@@ -31,5 +30,6 @@
 		"maplibre-gl": "^5.0.0",
 		"postcss": "^8.4.49",
 		"wrangler": "^3.99.0"
-	}
+	},
+	"packageManager": "yarn@4.6.0"
 }

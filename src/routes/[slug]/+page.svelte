@@ -1,14 +1,21 @@
 <script lang="ts">
-	import LeftBar from '$lib/LeftBar.svelte';
+	import LeftBar from '$lib/components/LeftBar.svelte';
 	import maplibregl from 'maplibre-gl';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
+	import Legend from '$lib/components/Legend.svelte';
+
+	import * as Drawer from '$lib/components/ui/drawer';
+	import { Button } from '$lib/components/ui/button';
 
 	let { data } = $props();
+
+	let screenWidth: number = $state(0);
 
 	let mapContainer: HTMLElement;
 
 	let map: maplibregl.Map;
+
 	onMount(() => {
 		map = new maplibregl.Map({
 			container: mapContainer,
@@ -38,51 +45,38 @@
 			});
 		});
 	});
-
-	// trigger visbility check
-	function handleVisibilityChange(layer: any) {
-		if (map) {
-			map.setLayoutProperty(
-				layer.name + '_layer',
-				'visibility',
-				layer.visible ? 'visible' : 'none'
-			);
-		}
-	}
 </script>
 
-<div class="grid grid-cols-12">
-	<section class="col-span-2">
+<svelte:window bind:innerWidth={screenWidth} />
+
+<div class="grid w-screen grid-cols-12">
+	<section class="col-span-12 md:col-span-2">
 		<LeftBar />
 	</section>
-	<section class="col-span-3 h-screen overflow-y-scroll bg-gray-100 p-10">
-		<h1 class="font-bold">{data.content.name}</h1>
+	{#if screenWidth > 768}
+		<section class="col-span-3 h-screen overflow-y-scroll bg-gray-100 p-10">
+			<h1 class="font-bold">{data.content.name}</h1>
+			<Legend bind:data bind:map />
+		</section>
+	{:else}
+		<section class="absolute bottom-0 right-0 z-50 m-1 w-full">
+			<Drawer.Root>
+				<Drawer.Trigger class="w-full rounded-sm bg-gray-100 p-2">Legend ↑</Drawer.Trigger>
+				<Drawer.Content>
+					<Drawer.Header>
+						<Drawer.Title>{data.content.name}</Drawer.Title>
+						<Drawer.Description><Legend bind:data bind:map /></Drawer.Description>
+					</Drawer.Header>
+					<!-- <Drawer.Footer>
+						<Button>Submit</Button>
+						<Drawer.Close>Cancel</Drawer.Close>
+					</Drawer.Footer> -->
+				</Drawer.Content>
+			</Drawer.Root>
+		</section>
+	{/if}
 
-		{#each data.content.layers as layer}
-			<div class="">
-				<div class="my-2 grid grid-cols-5">
-					<div class="col-span-4">
-						<h3>{layer.name}</h3>
-						<p class="text-xs">
-							Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-						</p>
-					</div>
-					<div class="my-auto px-5 align-middle">
-						<input
-							type="checkbox"
-							id={layer.name}
-							bind:checked={layer.visible}
-							onchange={() => {
-								handleVisibilityChange(layer);
-							}}
-							aria-checked={layer.visible}
-						/>
-					</div>
-				</div>
-			</div>
-		{/each}
-	</section>
-	<section id="map" class="col-span-7 h-screen" bind:this={mapContainer}></section>
+	<section id="map" class="col-span-12 h-screen md:col-span-7" bind:this={mapContainer}></section>
 </div>
 
 <style lang="postcss">

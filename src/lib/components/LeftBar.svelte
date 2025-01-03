@@ -10,7 +10,7 @@
 
 <svelte:window bind:innerWidth={screenWidth} />
 
-<div class="w-screen p-10 shadow-xl md:h-screen">
+<div class="w-screen p-10 shadow-xl md:h-screen md:w-auto">
 	<h1 class="text-bold font-serif font-bold md:text-xl">
 		The Participatory Geospatial Lab at Aruvu Collaboratory
 	</h1>

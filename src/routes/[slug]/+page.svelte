@@ -25,6 +25,15 @@
 		});
 
 		map.on('load', () => {
+			map.addControl(
+				new maplibregl.GeolocateControl({
+					positionOptions: {
+						enableHighAccuracy: true
+					},
+					trackUserLocation: true
+				})
+			);
+
 			data.content.layers.forEach((layer: any) => {
 				map.addSource(layer.name, {
 					type: 'raster',

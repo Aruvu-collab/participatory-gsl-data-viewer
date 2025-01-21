@@ -18,7 +18,7 @@
 			<div class="col-span-4 text-left">
 				<h3>{layer.name}</h3>
 				<p class="text-xs">
-					Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+					{layer.description}
 				</p>
 			</div>
 			<div class="my-auto px-5 align-middle">

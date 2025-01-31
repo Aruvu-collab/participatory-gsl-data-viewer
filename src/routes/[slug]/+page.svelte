@@ -35,22 +35,73 @@
 			);
 
 			data.content.layers.forEach((layer: any) => {
-				map.addSource(layer.name, {
-					type: 'raster',
-					// use the tiles option to specify a WMS tile source URL
-					// https://maplibre.org/maplibre-style-spec/sources/
-					tiles: [layer.url],
-					tileSize: 256
-				});
-				map.addLayer(
-					{
-						id: layer.name + '_layer',
-						type: 'raster',
+				if (layer.type === 'geojson') {
+					map.addSource(layer.name, {
+						type: 'geojson',
+						data: layer.url
+					});
+					map.addLayer({
+						id: layer.name + '_layer' + 'fill',
+						type: 'fill',
 						source: layer.name,
-						paint: {}
-					},
-					'aeroway_fill'
-				);
+						paint: {
+							'fill-color': layer.color
+						}
+					});
+					map.addLayer({
+						id: layer.name + '_layer' + 'line',
+						type: 'line',
+						source: layer.name,
+						paint: {
+							'line-color': layer.color
+						}
+					});
+					map.addLayer({
+						id: layer.name + '_layer' + 'point',
+						type: 'circle',
+						source: layer.name,
+						paint: {
+							'circle-color': layer.color,
+							'circle-radius': 5
+						}
+					});
+					// add labels
+					if (layer.label) {
+						map.addLayer({
+							id: layer.name + '_layer' + 'label',
+							type: 'symbol',
+							source: layer.name,
+							layout: {
+								'text-field': ['get', layer.label],
+								'text-font': ['Open Sans Regular'],
+								'text-allow-overlap': false,
+								'text-ignore-placement': false,
+								'text-size': 12,
+								'text-offset': [0, 1]
+							},
+							paint: {
+								'text-color': '#000'
+							}
+						});
+					}
+				} else if (layer.type === 'raster') {
+					map.addSource(layer.name, {
+						type: 'raster',
+						// use the tiles option to specify a WMS tile source URL
+						// https://maplibre.org/maplibre-style-spec/sources/
+						tiles: [layer.url],
+						tileSize: 256
+					});
+					map.addLayer(
+						{
+							id: layer.name + '_layer',
+							type: 'raster',
+							source: layer.name,
+							paint: {}
+						},
+						'aeroway_fill'
+					);
+				}
 			});
 		});
 	});

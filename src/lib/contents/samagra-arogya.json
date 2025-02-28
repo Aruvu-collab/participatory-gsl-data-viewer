@@ -5,6 +5,13 @@
 	"center": [74.742994, 13.730609],
 	"layers": [
 		{
+			"name": "Satellite Imagery",
+			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+			"type": "raster",
+			"attribution": "Satellite Imagery Powered by ESRI",
+			"visible": true
+		},
+		{
 			"name": "Cadastral",
 			"description": "Revenue maps from KGIS",
 			"type": "raster",

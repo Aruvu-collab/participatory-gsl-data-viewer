@@ -5,6 +5,13 @@
 	"center": [77.472839, 17.934409],
 	"layers": [
 		{
+			"name": "Satellite Imagery",
+			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+			"type": "raster",
+			"attribution": "Satellite Imagery Powered by ESRI",
+			"visible": true
+		},
+		{
 			"name": "Karez main line",
 			"description": "This is the assumed path of the Naubad Karez, as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
 			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Akarez&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",

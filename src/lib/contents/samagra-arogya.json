@@ -7,6 +7,7 @@
 		{
 			"name": "Cadastral",
 			"description": "Revenue maps from KGIS",
+			"type": "raster",
 			"url": "https://geoserver.livinglabs.network/geoserver/Kundapura-SamagraAarogya/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kundapura-SamagraAarogya%3Acadastral&bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
 			"visible": true
 		},
@@ -14,12 +15,14 @@
 		{
 			"name": "Gram Panchayaths",
 			"description": "Gram Panchayath Boundaries",
+			"type": "raster",
 			"url": "https://geoserver.livinglabs.network/geoserver/Kundapura-SamagraAarogya/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kundapura-SamagraAarogya%3Agram_panchayats&bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
 			"visible": true
 		},
 		{
 			"name": "Contours",
 			"description": "MSL Contours",
+			"type": "raster",
 			"url": "https://geoserver.livinglabs.network/geoserver/Kundapura-SamagraAarogya/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kundapura-SamagraAarogya%3Acontours&bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
 			"visible": true
 		}

@@ -15,7 +15,7 @@
 			"name": "Cadastral",
 			"description": "Revenue maps from KGIS",
 			"type": "raster",
-			"url": "https://geoserver.livinglabs.network/geoserver/Kundapura-SamagraAarogya/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kundapura-SamagraAarogya%3Acadastral&bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
+			"url": "https://geoserver.livinglabs.network/geoserver/Kundapura-SamagraAarogya/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kundapura-SamagraAarogya%3Acadestral&bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
 			"visible": true
 		},
 
@@ -24,6 +24,21 @@
 			"description": "Gram Panchayath Boundaries",
 			"type": "raster",
 			"url": "https://geoserver.livinglabs.network/geoserver/Kundapura-SamagraAarogya/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kundapura-SamagraAarogya%3Agram_panchayats&bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
+			"visible": true
+		},
+		{
+			"name": "Village",
+			"description": "Village Boundaries",
+			"type": "raster",
+			"url": "https://geoserver.livinglabs.network/geoserver/Kundapura-SamagraAarogya/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kundapura-SamagraAarogya%3Avillages&bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
+			"visible": true
+		},
+		{
+			"name": "Settlements",
+			"description": "Village Boundaries",
+			"attribution": "KGIS",
+			"type": "raster",
+			"url": "https://geoserver.livinglabs.network/geoserver/Kundapura-SamagraAarogya/wms?service=WMS&version=1.1.0&request=GetMap&layers=Kundapura-SamagraAarogya%3Avillages&bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
 			"visible": true
 		},
 		{

@@ -102,6 +102,11 @@
 						'aeroway_fill'
 					);
 				}
+				map.setLayoutProperty(
+					layer.name + '_layer',
+					'visibility',
+					layer.visible ? 'visible' : 'none'
+				);
 			});
 		});
 	});

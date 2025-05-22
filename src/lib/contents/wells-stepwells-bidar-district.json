@@ -9,7 +9,7 @@
 			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 			"type": "raster",
 			"attribution": "Satellite Imagery Powered by ESRI",
-			"visible": true
+			"visible": false
 		},
 		{
 			"name": "Karez main line",
@@ -35,6 +35,14 @@
 			"label": "name",
 			"visible": true
 		},
+		{
+			"name": "Drainage and Streams",
+			"description": " Calculated from Copernicus 30m",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Astream_drainage&bbox={bbox-epsg-3857}&width=768&height=712&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"type": "raster",
+			"visible": true
+		},
+		
 		{
 			"name": "Taluka Boundary",
 			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Ataluka&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",

@@ -1,6 +1,8 @@
 {
 	"name": "Samagra Arogya",
 	"slug": "samagra-arogya",
+	"short_desc": "Samagra Arogya is a long-term place-based collaborative engagement to understand and respond to Social Determinants of Health at the Gram Panchayat level.",
+	"long_desc": "",
 	"zoom": 11,
 	"center": [74.742994, 13.730609],
 	"layers": [

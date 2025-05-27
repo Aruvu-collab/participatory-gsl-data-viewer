@@ -1,6 +1,8 @@
 {
 	"name": "The Naubad Karez",
 	"slug": "karez",
+	"short_desc": "The Naubad Karez is the only documented, conserved and known aqueduct built during the Bahmani period in Bidar.",
+	"long_desc": "",
 	"zoom": 13,
 	"center": [77.472839, 17.934409],
 	"layers": [

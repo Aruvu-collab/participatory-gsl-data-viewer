@@ -1,7 +1,9 @@
 {
 	"name": "Wells and Stepwells in Bidar District",
 	"slug": "wells-stepwells-bidar-district",
-	"zoom": 8,
+	"short_desc": "Wells and watersystems of various kinds that we have been documenting to conserve and build a holistic understanding of watersystems in the semi-arid district.",
+	"long_desc": "",
+	"zoom": 9,
 	"center": [77.472839, 17.934409],
 	"layers": [
 		{

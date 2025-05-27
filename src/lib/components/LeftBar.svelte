@@ -36,10 +36,23 @@
 			</Collapsible.Root>
 		{/if}
 	</div>
+
+	<hr class='mb-4'>
+	<p class="text-xs mt-4">
+		This website represents the work of <a href="https://aruvu.org" target="_blank">Aruvu Collaboratory</a>, <a href="https://untold.town/living-labs-network-and-forum/" target="_blank">Living Labs Network and Forum</a>, <a href="https://untold.town/team-yuvaa/" target="_blank">Team YUVAA</a>. The Collectives publish their work on the web at <a href="https://untold.town" target="_blank">Untold.Town</a>	
+	</p>
 </div>
 
 <style lang="postcss">
 	li {
 		@apply m-1 cursor-pointer list-none bg-gray-100 p-1 hover:bg-gray-200;
+	};
+
+	p > a{
+		@apply underline 
+	}
+
+	a{
+		@apply hover:bg-blue-200
 	}
 </style>

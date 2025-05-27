@@ -121,6 +121,7 @@
 	{#if screenWidth > 768}
 		<section class="col-span-3 h-screen overflow-y-scroll bg-gray-100 p-10">
 			<h1 class="font-bold">{data.content.name}</h1>
+			<p>{data.content.short_desc}</p>
 			<Legend bind:data bind:map />
 		</section>
 	{:else}

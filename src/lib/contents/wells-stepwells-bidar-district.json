@@ -30,7 +30,11 @@
 		{
 			"name": "Wells",
 			"description": "These are old wells and stepwells being mapped across Bidar District, our current focus is on Bidar City, Basavakalyan City and Aurad City",
-			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Awells&bbox=76.87486%2C17.81107%2C77.57471%2C18.258&width=768&height=490&srs=EPSG%3A4326&styles=&format=geojson",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=stepwells%3Awells&outputFormat=application%2Fjson",
+			"export_url": {
+				"csv": "https://geoserver.livinglabs.network/geoserver/stepwells/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=stepwells%3Awells&outputFormat=csv",
+				"geojson": "https://geoserver.livinglabs.network/geoserver/stepwells/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=stepwells%3Awells&outputFormat=application%2Fjson"
+			},
 			"type": "geojson",
 			"geometry_type": "point",
 			"color": "#ff0000",

@@ -45,7 +45,7 @@
 
 <style lang="postcss">
 	li {
-		@apply m-1 cursor-pointer list-none bg-gray-100 p-1 hover:bg-gray-200;
+		@apply m-1 cursor-pointer list-none bg-neutral-300 p-2 rounded-sm hover:bg-gray-200;
 	};
 
 	p > a{

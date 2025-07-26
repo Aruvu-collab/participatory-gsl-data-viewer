@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 	import LeftBar from '$lib/components/LeftBar.svelte';
 	import maplibregl from 'maplibre-gl';
 	import 'maplibre-gl/dist/maplibre-gl.css';
@@ -7,14 +7,13 @@
 
 	import * as Drawer from '$lib/components/ui/drawer';
 	import { Button } from '$lib/components/ui/button';
+	import MetadataView from '$lib/components/MetadataView.svelte';
 
 	let { data } = $props();
-
-	let screenWidth: number = $state(0);
-
-	let mapContainer: HTMLElement;
-
-	let map: maplibregl.Map;
+	let screenWidth = $state(0);
+	let selectedFeature = $state(null);
+	let mapContainer;
+	let map;
 
 	onMount(() => {
 		map = new maplibregl.Map({
@@ -25,6 +24,7 @@
 		});
 
 		map.on('load', () => {
+			// Add geolocation control
 			map.addControl(
 				new maplibregl.GeolocateControl({
 					positionOptions: {
@@ -34,30 +34,38 @@
 				})
 			);
 
-			data.content.layers.forEach((layer: any) => {
+			// Add all configured layers
+			data.content.layers.forEach((layer) => {
+				// Handle GeoJSON layers
 				if (layer.type === 'geojson') {
 					map.addSource(layer.name, {
 						type: 'geojson',
 						data: layer.url
 					});
+
+					// Add fill layer
 					map.addLayer({
-						id: layer.name + '_layer' + 'fill',
+						id: layer.name + '_layer_fill',
 						type: 'fill',
 						source: layer.name,
 						paint: {
 							'fill-color': layer.color
 						}
 					});
+
+					// Add line layer
 					map.addLayer({
-						id: layer.name + '_layer' + 'line',
+						id: layer.name + '_layer_line',
 						type: 'line',
 						source: layer.name,
 						paint: {
 							'line-color': layer.color
 						}
 					});
+
+					// Add point layer
 					map.addLayer({
-						id: layer.name + '_layer' + 'point',
+						id: layer.name + '_layer_point',
 						type: 'circle',
 						source: layer.name,
 						paint: {
@@ -65,10 +73,11 @@
 							'circle-radius': 5
 						}
 					});
-					// add labels
+
+					// Add labels if configured
 					if (layer.label) {
 						map.addLayer({
-							id: layer.name + '_layer' + 'label',
+							id: layer.name + '_layer_label',
 							type: 'symbol',
 							source: layer.name,
 							layout: {
@@ -84,14 +93,33 @@
 							}
 						});
 					}
-				} else if (layer.type === 'raster') {
+
+					const layerId = layer.name + '_layer_point';
+					map.on('mouseenter', layerId, () => {
+						map.getCanvas().style.cursor = 'help';
+					});
+
+					// Change it back to a pointer when it leaves.
+					map.on('mouseleave', layerId, () => {
+						map.getCanvas().style.cursor = 'pointer';
+					});
+					map.on('click', layerId, (e) => {
+						if (e.features.length === 0) return;
+						selectedFeature = e.features[0];
+
+						map.flyTo({ center: e.features[0].geometry.coordinates, zoom:14,essential: true });
+					});
+
+					
+				}
+				// Handle raster layers
+				else if (layer.type === 'raster') {
 					map.addSource(layer.name, {
 						type: 'raster',
-						// use the tiles option to specify a WMS tile source URL
-						// https://maplibre.org/maplibre-style-spec/sources/
 						tiles: [layer.url],
 						tileSize: 256
 					});
+
 					map.addLayer(
 						{
 							id: layer.name + '_layer',
@@ -102,6 +130,49 @@
 						'aeroway_fill'
 					);
 				}
+				// Handle vector layers
+				else if (layer.type === 'vector') {
+					map.addSource(layer.name, {
+						type: 'vector',
+						tiles: [layer.url],
+						scheme: 'tms'
+					});
+
+					if (layer.layer_names && Array.isArray(layer.layer_names)) {
+						layer.layer_names.forEach((source_layer) => {
+							map.addLayer({
+								id: layer.name + '_layer_' + source_layer,
+								type: 'line',
+								source: layer.name,
+								'source-layer': source_layer,
+								paint: {
+									'line-color': layer.color,
+									'line-width': 2
+								}
+							});
+						});
+					}
+
+					if (layer.label) {
+						map.addLayer({
+							id: layer.name + '_layer_label',
+							type: 'symbol',
+							source: layer.name,
+							layout: {
+								'text-field': ['get', layer.label],
+								'text-font': ['Open Sans Regular'],
+								'text-allow-overlap': false,
+								'text-ignore-placement': false,
+								'text-size': 12,
+								'text-offset': [0, 1]
+							},
+							paint: {
+								'text-color': '#000'
+							}
+						});
+					}
+				}
+
 				map.setLayoutProperty(
 					layer.name + '_layer',
 					'visibility',
@@ -115,28 +186,37 @@
 <svelte:window bind:innerWidth={screenWidth} />
 
 <div class="grid w-screen grid-cols-12">
-	<section class="col-span-12 md:col-span-2">
-		<LeftBar />
-	</section>
+	<!-- <section class="col-span-12 md:col-span-2">
+			<LeftBar />
+		
+	</section> -->
 	{#if screenWidth > 768}
-		<section class="col-span-3 h-screen overflow-y-scroll bg-gray-100 p-10">
-			<h1 class="font-bold">{data.content.name}</h1>
-			<p>{data.content.short_desc}</p>
-			<Legend bind:data bind:map />
+		<section class="col-span-5 grid grid-cols-5 gap-x-5 md:max-h-screen">
+			<div class="col-span-2">
+				<Legend bind:data bind:map />
+			</div>
+			<div class="col-span-3">
+				<MetadataView {selectedFeature}></MetadataView>
+			</div>
 		</section>
 	{:else}
-		<section class="absolute bottom-0 right-0 z-50 m-1 w-full">
-			<Drawer.Root>
+		<section class="absolute right-0 bottom-0 z-50 m-1 grid max-h-[60vh] w-full gap-2">
+			{#if selectedFeature}
+				<Drawer.Root>
+					<Drawer.Trigger class="w-full rounded-sm bg-gray-100 p-2"
+						>View properties ↑</Drawer.Trigger
+					>
+					<Drawer.Content class="bg-gray-200">
+						<Drawer.Header></Drawer.Header>
+						<MetadataView {selectedFeature}></MetadataView>
+					</Drawer.Content>
+				</Drawer.Root>
+			{/if}
+
+			<Drawer.Root >
 				<Drawer.Trigger class="w-full rounded-sm bg-gray-100 p-2">Legend ↑</Drawer.Trigger>
-				<Drawer.Content>
-					<Drawer.Header>
-						<Drawer.Title>{data.content.name}</Drawer.Title>
-						<Drawer.Description><Legend bind:data bind:map /></Drawer.Description>
-					</Drawer.Header>
-					<!-- <Drawer.Footer>
-						<Button>Submit</Button>
-						<Drawer.Close>Cancel</Drawer.Close>
-					</Drawer.Footer> -->
+				<Drawer.Content class="bg-gray-200">
+					<Legend bind:data bind:map />
 				</Drawer.Content>
 			</Drawer.Root>
 		</section>
@@ -146,6 +226,7 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
 	li {
 		@apply list-none pt-2;
 	}

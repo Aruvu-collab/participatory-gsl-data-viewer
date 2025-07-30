@@ -42,6 +42,12 @@
 			"visible": true
 		},
 		{
+			"name": "1965 SOI Grid 56G5",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3ASOI_56G5_ED1UNGRIDDED_modified&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"type": "raster",
+			"visible": false
+		},
+		{
 			"name": "Drainage and Streams",
 			"description": " Calculated from Copernicus 30m",
 			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Astream_drainage&bbox={bbox-epsg-3857}&width=768&height=712&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",

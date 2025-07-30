@@ -126,8 +126,7 @@
 							type: 'raster',
 							source: layer.name,
 							paint: {}
-						},
-						'aeroway_fill'
+						}
 					);
 				}
 				// Handle vector layers

@@ -12,15 +12,15 @@
 	}
 </script>
 
-<section id="legend" class="md:max-h-screen grid gap-3 grid-rows-12 gap-10 p-4">
-	<div class="row-span-3">
-	<a class="font-size-[0.2em]" href="/">From the Participatory Geospatial Lab.</a>
+<section id="legend" class="md:max-h-screen flex flex-col gap-10 p-4">
+<div class="">
+	<a class="text-xs/6" href="/">From the Participatory Geospatial Lab.</a>
 	<h1 class="font-bold">{data.content.name}</h1>
 	<p class="my-2 text-xs">{data.content.short_desc}</p>
 </div>
-	<div class="row-span-8 overflow-y-scroll ">
+	<div class="overflow-y-scroll">
 	{#each data.content.layers as layer}
-		<div id="legend-item h-auto">
+		<div id="legend-item ">
 			<div class="my-2 grid grid-cols-5 rounded-sm bg-neutral-300 p-2">
 				<div class="col-span-4 text-left">
 					<h3>{layer.name}</h3>

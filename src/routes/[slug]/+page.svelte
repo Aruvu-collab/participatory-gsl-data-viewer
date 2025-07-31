@@ -20,9 +20,17 @@
 			container: mapContainer,
 			style: 'https://api.maptiler.com/maps/streets/style.json?key=XtQybTQjRpKFSRHVSG0G',
 			zoom: data.content.zoom,
-			center: data.content.center
+			center: data.content.center,
 		});
 
+		map.on('click', (e)=>{
+			map.flyTo({
+				center:e.lngLat,
+				pitch:90,
+				zoom:17,
+			    essential:true,
+			    speed: 0.3})
+		})
 		map.on('load', () => {
 			// Add geolocation control
 			map.addControl(
@@ -107,7 +115,7 @@
 						if (e.features.length === 0) return;
 						selectedFeature = e.features[0];
 
-						map.flyTo({ center: e.features[0].geometry.coordinates, zoom:14,essential: true });
+						map.flyTo({ center: e.features[0].geometry.coordinates, zoom:15, pitch:30, essential: true });
 					});
 
 					
@@ -125,7 +133,9 @@
 							id: layer.name + '_layer',
 							type: 'raster',
 							source: layer.name,
-							paint: {}
+							paint: {
+								'raster-opacity':layer.opacity,
+							}
 						}
 					);
 				}

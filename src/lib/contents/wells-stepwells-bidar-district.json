@@ -11,21 +11,24 @@
 			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 			"type": "raster",
 			"attribution": "Satellite Imagery Powered by ESRI",
-			"visible": false
+			"visible": false,
+			"opacity": 1
 		},
 		{
 			"name": "Karez main line",
 			"description": "This is the assumed path of the Naubad Karez, as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
 			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Akarez&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
-			"visible": true
+			"visible": true,
+			"opacity":1
 		},
 		{
 			"name": "Cadastral",
 			"description": "Revenue maps from KGIS",
 			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Acadastral&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
-			"visible": false
+			"visible": false,
+			"opacity": 1
 		},
 		{
 			"name": "Wells",
@@ -45,21 +48,24 @@
 			"name": "1965 SOI Grid 56G5",
 			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3ASOI_56G5_ED1UNGRIDDED_modified&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
-			"visible": false
+			"visible": false,
+			"opacity": 1
 		},
 		{
 			"name": "Drainage and Streams",
 			"description": " Calculated from Copernicus 30m",
 			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Astream_drainage&bbox={bbox-epsg-3857}&width=768&height=712&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
-			"visible": true
+			"visible": false,
+			"opacity": 0.5
 		},
 		
 		{
 			"name": "Taluka Boundary",
 			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Ataluka&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
-			"visible": true
+			"visible": true,
+			"opacity": 1
 		}
 	]
 }

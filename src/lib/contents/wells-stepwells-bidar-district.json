@@ -3,7 +3,7 @@
 	"slug": "wells-stepwells-bidar-district",
 	"short_desc": "Wells and watersystems of various kinds that we have been documenting to conserve and build a holistic understanding of watersystems in the semi-arid district.",
 	"long_desc": "",
-	"zoom": 9,
+	"zoom": 15,
 	"center": [77.472839, 17.934409],
 	"layers": [
 		{
@@ -11,7 +11,7 @@
 			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 			"type": "raster",
 			"attribution": "Satellite Imagery Powered by ESRI",
-			"visible": false,
+			"visible": true,
 			"opacity": 1
 		},
 		{
@@ -19,7 +19,7 @@
 			"description": "This is the assumed path of the Naubad Karez, as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
 			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Akarez&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
-			"visible": true,
+			"visible": false,
 			"opacity":1
 		},
 		{
@@ -64,6 +64,13 @@
 			"name": "Taluka Boundary",
 			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Ataluka&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
+			"visible": true,
+			"opacity": 1
+		},
+		{
+			"name": "Terrain",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Abidar-30mDEM_copernicus&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"type": "raster-dem",
 			"visible": true,
 			"opacity": 1
 		}

@@ -18,19 +18,35 @@
 	onMount(() => {
 		map = new maplibregl.Map({
 			container: mapContainer,
-			style: 'https://api.maptiler.com/maps/streets/style.json?key=XtQybTQjRpKFSRHVSG0G',
+			style:
+				'https://api.maptiler.com/maps/01988288-c280-7831-afe4-bc23d4dcb573/style.json?key=XtQybTQjRpKFSRHVSG0G',
 			zoom: data.content.zoom,
 			center: data.content.center,
+			maxZoom: 19,
+			minZoom: 7,
+			pitch: 30,
+			canvasContextAttributes: {
+				antialias: false, // Disable antialiasing for better performance
+				contextType: 'webgl2' // Choose which WebGL version to use
+			},
+			maxTileCacheSize: 300, // Limit cache size (null = dynamic sizing)
+			maxTileCacheZoomLevels: 5, // Limit how many zoom levels to cache
+			// Animation optimization
+			fadeDuration: 200, // shorter fade
+
+			// Feature reduction
+			renderWorldCopies: false // if not needed
 		});
 
-		map.on('click', (e)=>{
+		map.on('click', (e) => {
 			map.flyTo({
-				center:e.lngLat,
-				pitch:90,
-				zoom:17,
-			    essential:true,
-			    speed: 0.3})
-		})
+				center: e.lngLat,
+				pitch: 80,
+				zoom: 18,
+				essential: true,
+				speed: 0.3
+			});
+		});
 		map.on('load', () => {
 			// Add geolocation control
 			map.addControl(
@@ -39,6 +55,13 @@
 						enableHighAccuracy: true
 					},
 					trackUserLocation: true
+				})
+			);
+			map.addControl(
+				new maplibregl.NavigationControl({
+					visualizePitch: true,
+					showZoom: true,
+					showCompass: true
 				})
 			);
 
@@ -115,10 +138,33 @@
 						if (e.features.length === 0) return;
 						selectedFeature = e.features[0];
 
-						map.flyTo({ center: e.features[0].geometry.coordinates, zoom:15, pitch:30, essential: true });
+						map.flyTo({
+							center: e.features[0].geometry.coordinates,
+							zoom: 15,
+							pitch: 30,
+							essential: true
+						});
+					});
+				}
+				// Handle DEM
+				else if (layer.type == 'raster-dem') {
+					map.addSource(layer.name, {
+						type: 'raster-dem',
+						tiles: [layer.url],
+						tileSize: 256
 					});
 
-					
+					map.setTerrain({
+						source: layer.name,
+						exaggeration: 0.00005
+					});
+
+					map.addControl(
+						new maplibregl.TerrainControl({
+							source: 'terrainSource',
+							exaggeration: 1
+						})
+					);
 				}
 				// Handle raster layers
 				else if (layer.type === 'raster') {
@@ -128,16 +174,14 @@
 						tileSize: 256
 					});
 
-					map.addLayer(
-						{
-							id: layer.name + '_layer',
-							type: 'raster',
-							source: layer.name,
-							paint: {
-								'raster-opacity':layer.opacity,
-							}
+					map.addLayer({
+						id: layer.name + '_layer',
+						type: 'raster',
+						source: layer.name,
+						paint: {
+							'raster-opacity': layer.opacity
 						}
-					);
+					});
 				}
 				// Handle vector layers
 				else if (layer.type === 'vector') {
@@ -222,7 +266,7 @@
 				</Drawer.Root>
 			{/if}
 
-			<Drawer.Root >
+			<Drawer.Root>
 				<Drawer.Trigger class="w-full rounded-sm bg-gray-100 p-2">Legend ↑</Drawer.Trigger>
 				<Drawer.Content class="bg-gray-200">
 					<Legend bind:data bind:map />

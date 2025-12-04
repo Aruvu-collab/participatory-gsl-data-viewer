@@ -6,7 +6,7 @@
 	$: imageProperties = selectedFeature
 		? Object.entries(selectedFeature.properties || {}).filter(
 				([key, value]) =>
-					key.toLowerCase().includes('s') &&
+					// key.toLowerCase().includes('s') &&
 					value !== null &&
 					value !== '' &&
 					value.toString().toLowerCase().includes('dcim/') &&
@@ -96,15 +96,15 @@
 					0
 				)}</pre>
 		</div>
-		<div class=" md:grid-rows-5">
+		<div class=" md:grid-rows-5 overflow-y-none">
 			<!-- Images Grid -->
 			{#if imageProperties.length > 0}
 				<div class="rounded-lg border border-gray-200 bg-white shadow-sm md:row-span-3">
-					<div class="md:flex-column space-y-4 overflow-y-auto p-1 md:flex">
+					<div class="flex flex-wrap gap-2 p-2">
 						{#each imageProperties as [key, filename]}
-							<div class="space-y-2">
+							<div class="relative">
 								<div
-									class="aspect-square cursor-pointer"
+									class="h-48 w-48 cursor-pointer overflow-hidden rounded-md border border-gray-200"
 									on:click={() => {
 										lightboxSrc = `https://minio.livinglabs.network/pgsl-site/${filename.replace('DCIM/', '')}`;
 									}}
@@ -112,19 +112,18 @@
 									<img
 										src="https://minio.livinglabs.network/pgsl-site/{filename.replace('DCIM/', '')}"
 										alt={key}
-										class="min-h-full min-w-full rounded-md border border-gray-200 object-cover"
+										class="h-full w-full object-cover"
 										on:error={(e) => {
 											e.target.parentElement.innerHTML =
 												'<div class="flex items-center justify-center h-full text-gray-500 text-sm">Image not found</div>';
 										}}
 									/>
-									<span
-										class="fixed bottom-0 left-0 inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-800"
-									>
-										{formatKey(key)}
-									</span>
 								</div>
-								<div class="text-center"></div>
+								<span
+									class="absolute bottom-1 left-1 inline-flex items-center rounded-md bg-gray-100/90 px-2 py-1 text-xs font-medium text-gray-800"
+								>
+									{formatKey(key)}
+								</span>
 							</div>
 						{/each}
 					</div>

@@ -1,0 +1,57 @@
+{
+	"name": "Public infrastructure in Alur Panchayat, Kundapura Taluk",
+	"slug": "alur-kundapura-infrastructure",
+	"short_desc": "This is collaboratively produced by Living Labs Institute and the Alur Grama Panchayath, of the Alur Panchayat's public infrastructure. Through conversations with some of the members of both the Aluru and Harkuru VWSC, namely Rajesh Devadiga, Ravi Shetty, Prashanth Kulal and Prasanna Shetty, we listed the different water systems that concerns Aluru Panchayat.",
+	"long_desc": "Through conversations with some of the members of both the Aluru and Harkuru VWSC, namely Rajesh Devadiga, Ravi Shetty, Prashanth Kulal and Prasanna Shetty, we listed the different water systems that concerns Aluru Panchayat.",
+	"zoom": 11,
+	"center": [74.726429,13.754642],
+	"layers": [
+		{
+			"name": "Satellite Imagery",
+			"description": "ESRI Satellite Imagery",
+			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+			"type": "raster",
+			"attribution": "Satellite Imagery Powered by ESRI",
+			"visible": true,
+			"opacity": 1
+		},
+		{
+			"name": "Alur Gram Panchayath",
+			"description": "Gram Panchayath Boundary",
+			"type": "raster",
+			"url": "https://geoserver.livinglabs.network/geoserver/alur-infra/wms?service=WMS&version=1.1.0&request=GetMap&layers=alur-infra%3Aalur-panchayat &bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
+			"visible": true,
+			"opacity": 1
+		},
+		{
+			"name": "Water infrastructure",
+			"description": "Public water, Irrigation and Drinking water infrastructure in the Alur Panchayat",
+			"url": "https://geoserver.livinglabs.network/geoserver/alur-infra/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=alur-infra%3Awatersystems_point&outputFormat=application%2Fjson",
+			"export_url": {
+				"csv": "https://geoserver.livinglabs.network/geoserver/alur-infra/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=alur-infra%3Awatersystems_point&outputFormat=csv",
+				"geojson": "https://geoserver.livinglabs.network/geoserver/alur-infra/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=alur-infra%3Awatersystems_point&outputFormat=application%2Fjson"
+			},
+			"type": "geojson",
+			"geometry_type": "point",
+			"color": "#000000",
+			"label": "name_en",
+			"visible": true
+		},
+		{
+			"name": "Public Landmarks",
+			"description": "These have been mapped on OpenStreetMap.",
+			"url": "https://geoserver.livinglabs.network/geoserver/alur-infra/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=alur-infra%3Aalur-landmarks-points&outputFormat=application%2Fjson",
+			"export_url": {
+				"csv": "https://geoserver.livinglabs.network/geoserver/alur-infra/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=alur-infra%3Aalur-landmarks-points&outputFormat=csv",
+				"geojson": "https://geoserver.livinglabs.network/geoserver/alur-infra/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=alur-infra%3Aalur-landmarks-points&outputFormat=application%2Fjson"
+			},
+			"type": "geojson",
+			"geometry_type": "point",
+			"color": "#006cd8",
+			"label": "name",
+			"visible": true
+		}
+	
+
+	]
+}

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import samagraArogya from '../contents/samagra-arogya.json';
 	import karez from '../contents/karez.json';
-	import ennore from '../contents/ennore.json';
+	import alur from '../contents/alur-kundapura-infrastructure.json';
 	import wells from '../contents/wells-stepwells-bidar-district.json';
 
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	let list: Array<any> = [karez, samagraArogya, wells];
+	let list: Array<any> = [karez, samagraArogya, wells, alur];
 	let screenWidth: number = 0;
 </script>
 

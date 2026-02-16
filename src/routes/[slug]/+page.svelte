@@ -6,6 +6,7 @@
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount, mount } from 'svelte';
 	import Legend from '$lib/components/Legend.svelte';
+	import { goto } from '$app/navigation';
 
 	import * as Drawer from '$lib/components/ui/drawer';
 	import { Button } from '$lib/components/ui/button';
@@ -20,16 +21,52 @@
 
 	const isMobile = $derived(screenWidth <= 768);
 
+	// Function to update URL with current layer visibility
+	function updateLayersInUrl() {
+		if (!map) return;
+		
+		const visibleLayers = data.content.layers
+			.filter(layer => {
+				const layerId = layer.name + '_layer';
+				try {
+					const visibility = map.getLayoutProperty(layerId, 'visibility');
+					return visibility === 'visible';
+				} catch (e) {
+					return false;
+				}
+			})
+			.map(layer => layer.name)
+			.join(',');
+		
+		const url = new URL(window.location.href);
+		if (visibleLayers) {
+			url.searchParams.set('layers', visibleLayers);
+		} else {
+			url.searchParams.delete('layers');
+		}
+		goto(url.pathname + url.search, { replaceState: true, noScroll: true });
+	}
+
 	onMount(async () => {
+		// Get URL params
+		const urlParams = new URLSearchParams(window.location.search);
+		const urlLng = urlParams.get('lng');
+		const urlLat = urlParams.get('lat');
+		const urlZoom = urlParams.get('zoom');
+		const urlPitch = urlParams.get('pitch');
+		const urlBearing = urlParams.get('bearing');
+		const urlLayers = urlParams.get('layers');
+
 		map = new maplibregl.Map({
 			container: mapContainer,
 			style:
 				'https://api.maptiler.com/maps/01988288-c280-7831-afe4-bc23d4dcb573/style.json?key=XtQybTQjRpKFSRHVSG0G',
-			zoom: data.content.zoom,
-			center: data.content.center,
+			zoom: urlZoom ? parseFloat(urlZoom) : data.content.zoom,
+			center: urlLng && urlLat ? [parseFloat(urlLng), parseFloat(urlLat)] : data.content.center,
+			pitch: urlPitch ? parseFloat(urlPitch) : 0,
+			bearing: urlBearing ? parseFloat(urlBearing) : 0,
 			maxZoom: 17,
 			minZoom: 7,
-			pitch: 0,
 			canvasContextAttributes: {
 				antialias: false, // Disable antialiasing for better performance
 				contextType: 'webgl2' // Choose which WebGL version to use
@@ -41,6 +78,26 @@
 
 			// Feature reduction
 			renderWorldCopies: false // if not needed
+		});
+
+		// Update URL when map moves
+		let moveTimeout;
+		map.on('moveend', () => {
+			clearTimeout(moveTimeout);
+			moveTimeout = setTimeout(() => {
+				const center = map.getCenter();
+				const zoom = map.getZoom();
+				const pitch = map.getPitch();
+				const bearing = map.getBearing();
+				
+				const url = new URL(window.location.href);
+				url.searchParams.set('lng', center.lng.toFixed(6));
+				url.searchParams.set('lat', center.lat.toFixed(6));
+				url.searchParams.set('zoom', zoom.toFixed(2));
+				url.searchParams.set('pitch', pitch.toFixed(0));
+				url.searchParams.set('bearing', bearing.toFixed(0));
+				goto(url.pathname + url.search, { replaceState: true, noScroll: true });
+			}, 500);
 		});
 
 		map.on('click', (e) => {
@@ -283,11 +340,30 @@
 					}
 				}
 
+				const shouldBeVisible = urlLayers 
+					? urlLayers.split(',').includes(layer.name) 
+					: layer.visible;
+				
 				map.setLayoutProperty(
 					layer.name + '_layer',
 					'visibility',
-					layer.visible ? 'visible' : 'none'
+					shouldBeVisible ? 'visible' : 'none'
 				);
+				
+				// Also set visibility for other layer types (fill, line, point, label)
+				if (layer.type === 'geojson') {
+					['_layer_fill', '_layer_line', '_layer_point', '_layer_label'].forEach(suffix => {
+						try {
+							map.setLayoutProperty(
+								layer.name + suffix,
+								'visibility',
+								shouldBeVisible ? 'visible' : 'none'
+							);
+						} catch (e) {
+							// Layer might not exist (e.g., no label configured)
+						}
+					});
+				}
 			});
 		});
 	});

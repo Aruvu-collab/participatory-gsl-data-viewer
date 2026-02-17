@@ -1,10 +1,10 @@
 {
 	"name": "Public infrastructure in Alur Panchayat, Kundapura Taluk",
 	"slug": "alur-kundapura-infrastructure",
-	"short_desc": "This is collaboratively produced by Living Labs Institute and the Alur Grama Panchayath, of the Alur Panchayat's public infrastructure. Through conversations with some of the members of both the Aluru and Harkuru VWSC, namely Rajesh Devadiga, Ravi Shetty, Prashanth Kulal and Prasanna Shetty, we listed the different water systems that concerns Aluru Panchayat.",
+	"short_desc": "This is collaboratively produced by Living Labs Institute and the Alur Grama Panchayath, Kundapura Taluk of the Alur Panchayat's public infrastructure.",
 	"long_desc": "Through conversations with some of the members of both the Aluru and Harkuru VWSC, namely Rajesh Devadiga, Ravi Shetty, Prashanth Kulal and Prasanna Shetty, we listed the different water systems that concerns Aluru Panchayat.",
 	"zoom": 11,
-	"center": [74.726429,13.754642],
+	"center": [74.726429, 13.754642],
 	"layers": [
 		{
 			"name": "Satellite Imagery",
@@ -51,7 +51,5 @@
 			"label": "name",
 			"visible": true
 		}
-	
-
 	]
 }

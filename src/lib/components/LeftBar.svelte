@@ -3,56 +3,141 @@
 	import karez from '../contents/karez.json';
 	import alur from '../contents/alur-kundapura-infrastructure.json';
 	import wells from '../contents/wells-stepwells-bidar-district.json';
+	import { onMount } from 'svelte';
 
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	let list: Array<any> = [karez, samagraArogya, wells, alur];
 	let screenWidth: number = 0;
+	let pgslPosts: Array<any> = [];
+	let loading = true;
+	let error = '';
+
+	onMount(async () => {
+		try {
+			// Ghost Content API endpoint
+			const response = await fetch(
+				'https://untold.town/ghost/api/content/posts/?key=118485e791e69afcff3d060037&filter=tag:participatory-geospatial-lab&limit=4&fields=title,url,published_at,feature_image'
+			);
+
+			if (!response.ok) {
+				throw new Error('Failed to fetch posts');
+			}
+
+			const data = await response.json();
+			pgslPosts = data.posts || [];
+		} catch (err) {
+			error = 'Unable to load blog posts';
+			console.error(err);
+		} finally {
+			loading = false;
+		}
+	});
 </script>
 
 <svelte:window bind:innerWidth={screenWidth} />
 
-<div class="w-screen p-10 shadow-xl md:h-screen md:w-auto">
-	<h1 class="text-bold font-serif font-bold md:text-xl">
-		The Participatory Geospatial Lab at Aruvu Collaboratory
+<div class="w-screen p-10 shadow-xl md:h-screen md:w-auto overflow-y-auto">
+	<header class="sticky top-0 bg-white ">
+	<h1 class="text-bold font-serif font-bold text-black md:text-3xl ">
+		the <span class="bg-pink-600 text-white px-2">Participatory Geospatial Lab</span> at Aruvu Collaboratory
 	</h1>
-
-	<div class="w-full md:mt-10">
+	<p class="text-md bold mt-4">
+		This website represents the work of <a href="https://aruvu.org" target="_blank"
+			>Aruvu Collaboratory</a
+		>, <a href="https://livinglabs.network" target="_blank">Living Labs Network and Forum</a>,
+		<a href="https://untold.town/team-yuvaa/" target="_blank">Team YUVAA</a>. The Collectives
+		publish their work on the web at <a href="https://untold.town" target="_blank">Untold.Town</a>
+	</p>
+	</header>
+	<hr class="m-6" />
+	<div class="w-full">
 		<!-- dependant on screen size, make this collapsible-->
-		{#if screenWidth > 768}
-			<div class="font-bold"><h2>Places</h2></div>
+		<h3 class="text-lg font-bold">Collections:</h3>
+		<p class="text-xs">Each collection is linked to a long term engagement of the collectives</p>
+		<ul>
 			{#each list as listElement}
-				<a data-sveltekit-reload href="/{listElement.slug}"><li>{listElement.name}</li></a>
+				<a data-sveltekit-reload href="/{listElement.slug}"
+					><li
+						class="m-1 block rounded-lg bg-pink-800 p-2  font-bold font-serif"
+					>
+						{listElement.name}
+						<p class="text-xs my-1 ml-1 font-sans font-normal">{listElement.short_desc}</p>
+					</li>
+				</a>
 			{/each}
-		{:else}
-			<Collapsible.Root>
-				<Collapsible.Trigger class="mt-3 w-full bg-gray-100 px-4 font-bold"
-					>Places ↓</Collapsible.Trigger
-				>
-				<Collapsible.Content>
-					{#each list as listElement}
-						<a data-sveltekit-reload href="/{listElement.slug}"><li>{listElement.name}</li></a>
-					{/each}
-				</Collapsible.Content>
-			</Collapsible.Root>
-		{/if}
+		</ul>
 	</div>
 
-	<hr class='mb-4'>
-	<p class="text-xs mt-4">
-		This website represents the work of <a href="https://aruvu.org" target="_blank">Aruvu Collaboratory</a>, <a href="https://untold.town/living-labs-network-and-forum/" target="_blank">Living Labs Network and Forum</a>, <a href="https://untold.town/team-yuvaa/" target="_blank">Team YUVAA</a>. The Collectives publish their work on the web at <a href="https://untold.town" target="_blank">Untold.Town</a>	
-	</p>
+	<hr class="m-6" />
+
+	<div class="h-auto mt-4">
+		<h3 class="text-lg font-bold">Recent Blogs:</h3>
+		<p class="text-xs">Posts will redirect to untold.town, our online journal</p>
+		{#if loading}
+			<p class="text-sm text-gray-600">Loading posts...</p>
+		{:else if error}
+			<p class="text-sm text-red-600">{error}</p>
+		{:else if pgslPosts.length > 0}
+			<div class=" max-height-auto my-2 p-2">
+				<ul class="space-y-1">
+					{#each pgslPosts as post}
+						<a
+							href={post.url}
+							target="_blank"
+							class="block font-bold font-serif text-blue-600 hover:text-blue-800"
+						>
+							<li class="flex gap-3 rounded p-2 transition-colors">
+								{#if post.feature_image}
+									<img
+										src={post.feature_image}
+										alt={post.title}
+										class="h-30 w-50 flex-shrink-0 rounded object-cover"
+									/>
+								{:else}
+									<div
+										class="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded bg-gray-200"
+									>
+										<span class="text-xs text-gray-400">No image</span>
+									</div>
+								{/if}
+								<div class="min-w-0 flex-1">
+									{post.title}
+
+									<span class="mt-1 block text-xs text-gray-200">
+										{new Date(post.published_at).toLocaleDateString()}
+									</span>
+								</div>
+							</li>
+						</a>
+					{/each}
+				</ul>
+			</div>
+		{:else}
+			<p class="text-sm text-gray-600">No posts found with tag "pgsl"</p>
+		{/if}
+	</div>
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
 	li {
-		@apply m-1 cursor-pointer list-none bg-neutral-300 p-2 rounded-sm hover:bg-gray-200;
-	};
-
-	p > a{
-		@apply underline 
+		@apply m-1 cursor-pointer list-none rounded-sm bg-neutral-300 p-2 hover:bg-gray-200;
 	}
 
-	a{
-		@apply hover:bg-blue-200
+	p > a {
+		@apply underline;
 	}
+
+	a {
+		@apply hover:bg-blue-200;
+	}
+
+	li{
+  @apply bg-pink-800 !text-white;
+}
+
+a li {
+  @apply !text-white hover:bg-pink-600 hover:text-black;
+}
+
 </style>

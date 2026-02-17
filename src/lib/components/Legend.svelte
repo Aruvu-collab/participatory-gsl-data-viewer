@@ -5,11 +5,17 @@
 	function toggleNlayersVisibility(layer) {
 		if (map) {
 			const allLayers = map.getStyle().layers;
-			const nlayers = allLayers.filter((l) => l.id.toLowerCase().includes(layer.name.toLowerCase()));
+			const nlayers = allLayers.filter((l) =>
+				l.id.toLowerCase().includes(layer.name.toLowerCase())
+			);
 
 			nlayers.forEach((layer) => {
-				console.log(map.getLayoutProperty(layer.id, 'visibility'))
-				map.setLayoutProperty(layer.id, 'visibility', map.getLayoutProperty(layer.id, 'visibility')=='none' ? 'visible' : 'none');
+				console.log(map.getLayoutProperty(layer.id, 'visibility'));
+				map.setLayoutProperty(
+					layer.id,
+					'visibility',
+					map.getLayoutProperty(layer.id, 'visibility') == 'none' ? 'visible' : 'none'
+				);
 			});
 		}
 	}
@@ -17,8 +23,14 @@
 
 <section id="legend" class="flex flex-col gap-10 p-4 md:max-h-screen">
 	<div class="">
-		<a class="text-xs/6" href="/">From the Participatory Geospatial Lab.</a>
-		<h1 class="font-bold">{data.content.name}</h1>
+		<a class="text-xs/6" href="/"
+			>Home | From the <span class="bg-pink-600 px-2 text-white">
+				Participatory Geospatial Lab.</span
+			></a
+		>
+		<h1 class="my-2 text-3xl font-bold">
+			<span class="bg-pink-800 text-white">{data.content.name}</span>
+		</h1>
 		<p class="my-2 text-xs">{data.content.short_desc}</p>
 	</div>
 	<div class="overflow-y-scroll">
@@ -55,6 +67,27 @@
 			</div>
 		{/each}
 	</div>
+	<footer>
+		<div class="text-xs">
+			All data unless otherwise mentioned is licensed under CC BY-NC-SA. This license enables
+			reusers to distribute, remix, adapt, and build upon the material in any medium or format for
+			noncommercial purposes only, and only so long as attribution is given to the creator. If you
+			remix, adapt, or build upon the material, you must license the modified material under
+			identical terms. CC BY-NC-SA includes the following elements:
+			<br />
+			<div class="my-2 grid grid-cols-8 gap-3">
+				<div class="col-span-2">
+					<img src="/by-nc-sa.png" />
+				</div>
+
+				<div class="!list-none col-span-6">
+					<li>BY: credit must be given to the creator.</li>
+					<li>NC: Only noncommercial uses of the work are permitted.</li>
+					<li>SA: Adaptations must be shared under the same terms.</li>
+				</div>
+			</div>
+		</div>
+	</footer>
 </section>
 
 <style lang="postcss">

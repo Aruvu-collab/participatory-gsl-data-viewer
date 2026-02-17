@@ -91,7 +91,7 @@
 									<img
 										src={post.feature_image}
 										alt={post.title}
-										class="h-20 w-40 md:w-50 md:h-30 flex-shrink-4 rounded object-cover"
+										class="w-30 md:w-50 md:h-30 flex-shrink-4 rounded object-cover"
 									/>
 								{:else}
 									<div

@@ -54,7 +54,7 @@
 		<!-- dependant on screen size, make this collapsible-->
 		<h3 class="text-lg font-bold">Collections:</h3>
 		<p class="text-xs">Each collection is linked to a long term engagement of the collectives</p>
-		<ul>
+		<ul class="my-2">
 			{#each list as listElement}
 				<a data-sveltekit-reload href="/{listElement.slug}"
 					><li
@@ -78,7 +78,7 @@
 		{:else if error}
 			<p class="text-sm text-red-600">{error}</p>
 		{:else if pgslPosts.length > 0}
-			<div class=" max-height-auto my-2 p-2">
+			<div class=" my-2 ">
 				<ul class="space-y-1">
 					{#each pgslPosts as post}
 						<a
@@ -91,7 +91,7 @@
 									<img
 										src={post.feature_image}
 										alt={post.title}
-										class="h-30 w-50 flex-shrink-0 rounded object-cover"
+										class="h-20 w-40 md:w-50 md:h-30 flex-shrink-4 rounded object-cover"
 									/>
 								{:else}
 									<div
@@ -100,7 +100,7 @@
 										<span class="text-xs text-gray-400">No image</span>
 									</div>
 								{/if}
-								<div class="min-w-0 flex-1">
+								<div class="w-20 flex-1">
 									{post.title}
 
 									<span class="mt-1 block text-xs text-gray-200">

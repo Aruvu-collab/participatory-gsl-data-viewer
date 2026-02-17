@@ -3,10 +3,10 @@
 </script>
 
 <div class="grid grid-cols-10 ">
-	<section class="col-span-10 md:col-span-3">
+	<section class="col-span-10 md:col-span-4">
 		<LeftBar />
 	</section>
-	<section id="main-carousel" class="col-span-10 md:col-span-7 h-screen p-10">
+	<section id="main-carousel" class="col-span-10 md:col-span-6 h-screen p-10">
 	</section>
 </div>
 

@@ -109,7 +109,7 @@
 				speed: 0.3
 			});
 		});
-		map.on('load', () => {
+		map.on('load', async () => {
 			// Add geolocation control
 			map.addControl(
 				new maplibregl.GeolocateControl({
@@ -127,67 +127,118 @@
 				})
 			);
 
-			// Add all configured layers
-			data.content.layers.forEach((layer) => {
+			// Pre-load SVG icons before adding layers
+			await Promise.all(
+				data.content.layers
+					.filter((l) => l.type === 'geojson' && l.icon)
+					.map(
+						(layer) =>
+							new Promise((resolve) => {
+								const img = new Image(24, 24);
+								img.src = layer.icon;
+								img.onload = () => { map.addImage(layer.name + '_icon', img); resolve(null); };
+								img.onerror = () => resolve(null);
+							})
+					)
+			);
+
+			// Add all configured layers, sorted by render order
+			const addedSources = new Set();
+			const sortedLayers = [...data.content.layers].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+			sortedLayers.forEach((layer) => {
 				// Handle GeoJSON layers
 				if (layer.type === 'geojson') {
-					map.addSource(layer.name, {
-						type: 'geojson',
-						data: layer.url
-					});
+					const sourceId = layer.source ?? layer.name;
+					if (!addedSources.has(sourceId) && layer.url) {
+						map.addSource(sourceId, {
+							type: 'geojson',
+							data: layer.url
+						});
+						addedSources.add(sourceId);
+					}
 
-					// Add fill layer
-					map.addLayer({
-						id: layer.name + '_layer_fill',
-						type: 'fill',
-						source: layer.name,
-						paint: {
-							'fill-color': layer.color
-						}
-					});
+					const color = layer.color ?? '#000000';
+					const geomType = layer.geometry_type;
+					const filterExpr = layer.filter ?? undefined;
 
-					// Add line layer
-					map.addLayer({
-						id: layer.name + '_layer_line',
-						type: 'line',
-						source: layer.name,
-						paint: {
-							'line-color': layer.color
+					if (geomType === 'polygon') {
+						map.addLayer({
+							id: layer.name + '_layer_fill',
+							type: 'fill',
+							source: sourceId,
+							...(filterExpr && { filter: filterExpr }),
+							paint: layer.style?.fill ?? { 'fill-color': color }
+						});
+						map.addLayer({
+							id: layer.name + '_layer_line',
+							type: 'line',
+							source: sourceId,
+							...(filterExpr && { filter: filterExpr }),
+							paint: layer.style?.line ?? { 'line-color': color }
+						});
+					} else if (geomType === 'line') {
+						if (layer.style?.line_casing) {
+							map.addLayer({
+								id: layer.name + '_layer_line_casing',
+								type: 'line',
+								source: sourceId,
+								...(filterExpr && { filter: filterExpr }),
+								paint: layer.style.line_casing
+							});
 						}
-					});
-
-					// Add point layer
-					map.addLayer({
-						id: layer.name + '_layer_point',
-						type: 'circle',
-						source: layer.name,
-						paint: {
-							'circle-color': layer.color,
-							'circle-radius': 5,
-							'circle-stroke-width': 2, // Stroke width in pixels
-							'circle-stroke-color': '#ffffff'
-						}
-					});
+						map.addLayer({
+							id: layer.name + '_layer_line',
+							type: 'line',
+							source: sourceId,
+							...(filterExpr && { filter: filterExpr }),
+							paint: layer.style?.line ?? { 'line-color': color }
+						});
+					} else if (layer.icon) {
+						map.addLayer({
+							id: layer.name + '_layer_point',
+							type: 'symbol',
+							source: sourceId,
+							...(filterExpr && { filter: filterExpr }),
+							layout: {
+								'icon-image': layer.name + '_icon',
+								'icon-size': 1,
+								'icon-allow-overlap': true
+							}
+						});
+					} else {
+						map.addLayer({
+							id: layer.name + '_layer_point',
+							type: 'circle',
+							source: sourceId,
+							...(filterExpr && { filter: filterExpr }),
+							paint: layer.style?.circle ?? {
+								'circle-color': color,
+								'circle-radius': 5,
+								'circle-stroke-width': 2,
+								'circle-stroke-color': '#ffffff'
+							}
+						});
+					}
 
 					// Add labels if configured
 					if (layer.label) {
 						map.addLayer({
 							id: layer.name + '_layer_label',
 							type: 'symbol',
-							source: layer.name,
+							source: sourceId,
+							...(filterExpr && { filter: filterExpr }),
 							layout: {
 								'text-field': ['get', layer.label],
 								'text-font': ['Open Sans Regular'],
 								'text-allow-overlap': false,
 								'text-ignore-placement': false,
-								'text-size': 12,
-								'text-offset': [2, -2]
+								...(layer.style?.symbol_layout ?? { 'text-size': 12, 'text-offset': [2, -2] })
 							},
-							paint: {
+							paint: layer.style?.symbol ?? {
 								'text-color': '#000',
-								'text-halo-color': '#ffffff', // Background color
-								'text-halo-width': 2, // Background width in pixels
-								'text-halo-blur': 1 // Optional blur effect
+								'text-halo-color': '#ffffff',
+								'text-halo-width': 2,
+								'text-halo-blur': 1
 							}
 						});
 					}
@@ -270,7 +321,7 @@
 
 					map.setTerrain({
 						source: layer.name,
-						exaggeration: 0.00005
+						exaggeration: 0.00009
 					});
 
 					map.addControl(
@@ -312,8 +363,8 @@
 								type: 'line',
 								source: layer.name,
 								'source-layer': source_layer,
-								paint: {
-									'line-color': layer.color,
+								paint: layer.style?.line ?? {
+									'line-color': layer.color ?? '#000000',
 									'line-width': 2
 								}
 							});
@@ -330,10 +381,9 @@
 								'text-font': ['Open Sans Regular'],
 								'text-allow-overlap': false,
 								'text-ignore-placement': false,
-								'text-size': 12,
-								'text-offset': [0, 1]
+								...(layer.style?.symbol_layout ?? { 'text-size': 12, 'text-offset': [0, 1] })
 							},
-							paint: {
+							paint: layer.style?.symbol ?? {
 								'text-color': '#000'
 							}
 						});
@@ -352,7 +402,7 @@
 				
 				// Also set visibility for other layer types (fill, line, point, label)
 				if (layer.type === 'geojson') {
-					['_layer_fill', '_layer_line', '_layer_point', '_layer_label'].forEach(suffix => {
+					['_layer_fill', '_layer_line_casing', '_layer_line', '_layer_point', '_layer_label'].forEach(suffix => {
 						try {
 							map.setLayoutProperty(
 								layer.name + suffix,
@@ -398,7 +448,7 @@
 
 			<Drawer.Root>
 				<Drawer.Trigger class="w-full rounded-sm bg-gray-100 p-2">Legend ↑</Drawer.Trigger>
-				<Drawer.Content class="bg-gray-200">
+				<Drawer.Content class="bg-gray-200 max-h-[70svh] flex flex-col overflow-hidden">
 					<Legend bind:data bind:map />
 				</Drawer.Content>
 			</Drawer.Root>

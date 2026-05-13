@@ -7,18 +7,49 @@
 	"center": [77.472839, 17.934409],
 	"layers": [
 		{
-			"name": "Satellite Imagery",
-			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-			"type": "raster",
-			"attribution": "Satellite Imagery Powered by ESRI",
+			"name": "Terrain",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Abidar-30mDEM_copernicus&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"type": "raster-dem",
+			"category": "basemap",
+			"order": 1,
 			"visible": true,
 			"opacity": 1
 		},
 		{
-			"name": "Karez main line",
-			"description": "This is the assumed path of the Naubad Karez, as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
-			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Akarez&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"name": "Satellite Imagery",
+			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 			"type": "raster",
+			"attribution": "Satellite Imagery Powered by ESRI",
+			"category": "basemap",
+			"order": 2,
+			"visible": true,
+			"opacity": 1
+		},
+		{
+			"name": "Taluka Boundary",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Ataluka&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"type": "raster",
+			"category": "reference",
+			"order": 3,
+			"visible": true,
+			"opacity": 1
+		},
+		{
+			"name": "Drainage and Streams",
+			"description": "Calculated from Copernicus 30m",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Astream_drainage&bbox={bbox-epsg-3857}&width=768&height=712&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"type": "raster",
+			"category": "reference",
+			"order": 4,
+			"visible": false,
+			"opacity": 0.5
+		},
+		{
+			"name": "1965 SOI Grid 56G5",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3ASOI_56G5_ED1UNGRIDDED_modified&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"type": "raster",
+			"category": "reference",
+			"order": 5,
 			"visible": false,
 			"opacity": 1
 		},
@@ -27,48 +58,128 @@
 			"description": "Revenue maps from KGIS",
 			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Acadastral&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
+			"category": "reference",
+			"order": 6,
 			"visible": false,
 			"opacity": 1
+		},
+		{
+			"name": "Karez Lines",
+			"description": "Possible and Present Karez lines. Assumed paths of the Karezs', as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=stepwells%3Akarez_lines&outputFormat=application%2Fjson",
+			"type": "geojson",
+			"geometry_type": "line",
+			"category": "data",
+			"order": 7,
+			"icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cline x1='0' y1='6' x2='24' y2='6' stroke='%23ffffff' stroke-width='6'/%3E%3Cline x1='0' y1='6' x2='24' y2='6' stroke='%230000ff' stroke-width='2'/%3E%3C/svg%3E",
+			"color": "#000000",
+			"label": "name",
+			"visible": true,
+			"style": {
+				"line_casing": {
+					"line-color": "#ffffff",
+					"line-width": 6
+				},
+				"line": {
+					"line-color": "#0000ff",
+					"line-width": 2
+				},
+				"symbol": {
+					"text-color": "#000000",
+					"text-halo-color": "#ffffff",
+					"text-halo-width": 5,
+					"text-halo-blur": 2
+				},
+				"symbol_layout": {
+					"text-size": 14,
+					"symbol-placement": "line",
+					"text-rotation-alignment": "map"
+				}
+			}
 		},
 		{
 			"name": "Wells",
-			"description": "These are old wells and stepwells being mapped across Bidar District, our current focus is on Bidar City, Basavakalyan City and Aurad City",
+			"description": "Open wells mapped across Bidar District",
 			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=stepwells%3Awells&outputFormat=application%2Fjson",
 			"type": "geojson",
 			"geometry_type": "point",
+			"category": "data",
+			"order": 8,
+			"icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23000000' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E",
 			"color": "#000000",
 			"label": "name",
-			"visible": true
-		},
-		{
-			"name": "1965 SOI Grid 56G5",
-			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3ASOI_56G5_ED1UNGRIDDED_modified&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
-			"type": "raster",
-			"visible": false,
-			"opacity": 1
-		},
-		{
-			"name": "Drainage and Streams",
-			"description": " Calculated from Copernicus 30m",
-			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Astream_drainage&bbox={bbox-epsg-3857}&width=768&height=712&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
-			"type": "raster",
-			"visible": false,
-			"opacity": 0.5
-		},
-
-		{
-			"name": "Taluka Boundary",
-			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Ataluka&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
-			"type": "raster",
 			"visible": true,
-			"opacity": 1
+			"filter": ["all", ["!=", ["get", "well_type"], "kalyani"], ["!=", ["get", "well_type"], "stepwell"]],
+			"style": {
+				"circle": {
+					"circle-color": "#000000",
+					"circle-radius": 6,
+					"circle-stroke-width": 1.5,
+					"circle-stroke-color": "#ffffff"
+				},
+				"symbol": {
+					"text-color": "#000000",
+					"text-halo-color": "#ffffff",
+					"text-halo-width": 2,
+					"text-halo-blur": 1
+				},
+				"symbol_layout": {
+					"text-size": 12,
+					"text-offset": [2, -2]
+				}
+			}
 		},
 		{
-			"name": "Terrain",
-			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Abidar-30mDEM_copernicus&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
-			"type": "raster-dem",
+			"name": "Kalyanis",
+			"description": "Kalyanis — large stepped tank complexes",
+			"source": "Wells",
+			"type": "geojson",
+			"geometry_type": "point",
+			"category": "data",
+			"order": 9,
+			"icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='4' y='4' width='16' height='16' fill='%23000000' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E",
+			"color": "#000000",
+			"label": "name",
 			"visible": true,
-			"opacity": 1
+			"filter": ["==", ["get", "well_type"], "kalyani"],
+			"style": {
+				"symbol": {
+					"text-color": "#000000",
+					"text-halo-color": "#ffffff",
+					"text-halo-width": 2,
+					"text-halo-blur": 1
+				},
+				"symbol_layout": {
+					"text-size": 12,
+					"text-offset": [2, -2]
+				}
+			}
+		},
+		{
+			"name": "Stepwells",
+			"description": "Stepwells or Barambawdis — wells with stepped corridors",
+			"source": "Wells",
+			"type": "geojson",
+			"geometry_type": "point",
+			"category": "data",
+			"order": 10,
+			"icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='2' y='2' width='10' height='10' fill='%23000000' stroke='%23ffffff' stroke-width='1.5'/%3E%3Crect x='12' y='12' width='10' height='10' fill='%23000000' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E",
+			"color": "#000000",
+			"label": "name",
+			"visible": true,
+			"filter": ["==", ["get", "well_type"], "stepwell"],
+			"style": {
+				"symbol": {
+					"text-color": "#000000",
+					"text-halo-color": "#ffffff",
+					"text-halo-width": 2,
+					"text-halo-blur": 1
+				},
+				"symbol_layout": {
+					"text-size": 12,
+					"text-offset": [2, -2]
+				}
+			}
 		}
 	]
 }

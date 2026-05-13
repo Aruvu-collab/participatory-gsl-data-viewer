@@ -12,6 +12,8 @@
 			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 			"type": "raster",
 			"attribution": "Satellite Imagery Powered by ESRI",
+			"category": "basemap",
+			"order": 1,
 			"visible": true,
 			"opacity": 1
 		},
@@ -20,6 +22,8 @@
 			"description": "Gram Panchayath Boundary",
 			"type": "raster",
 			"url": "https://geoserver.livinglabs.network/geoserver/alur-infra/wms?service=WMS&version=1.1.0&request=GetMap&layers=alur-infra%3Aalur-panchayat &bbox={bbox-epsg-3857}&width=768&height=525&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
+			"category": "reference",
+			"order": 2,
 			"visible": true,
 			"opacity": 1
 		},
@@ -33,9 +37,30 @@
 			},
 			"type": "geojson",
 			"geometry_type": "point",
+			"category": "data",
+			"order": 3,
+			"icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23000000' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E",
 			"color": "#000000",
 			"label": "name_en",
-			"visible": true
+			"visible": true,
+			"style": {
+				"circle": {
+					"circle-color": "#000000",
+					"circle-radius": 5,
+					"circle-stroke-width": 2,
+					"circle-stroke-color": "#ffffff"
+				},
+				"symbol": {
+					"text-color": "#000000",
+					"text-halo-color": "#ffffff",
+					"text-halo-width": 2,
+					"text-halo-blur": 1
+				},
+				"symbol_layout": {
+					"text-size": 12,
+					"text-offset": [2, -2]
+				}
+			}
 		},
 		{
 			"name": "Public Landmarks",
@@ -47,9 +72,30 @@
 			},
 			"type": "geojson",
 			"geometry_type": "point",
+			"category": "data",
+			"order": 4,
+			"icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23006cd8' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E",
 			"color": "#006cd8",
 			"label": "name",
-			"visible": true
+			"visible": true,
+			"style": {
+				"circle": {
+					"circle-color": "#006cd8",
+					"circle-radius": 5,
+					"circle-stroke-width": 2,
+					"circle-stroke-color": "#ffffff"
+				},
+				"symbol": {
+					"text-color": "#000000",
+					"text-halo-color": "#ffffff",
+					"text-halo-width": 2,
+					"text-halo-blur": 1
+				},
+				"symbol_layout": {
+					"text-size": 12,
+					"text-offset": [2, -2]
+				}
+			}
 		}
 	]
 }

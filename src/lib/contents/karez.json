@@ -11,30 +11,17 @@
 			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 			"type": "raster",
 			"attribution": "Satellite Imagery Powered by ESRI",
+			"category": "basemap",
+			"order": 1,
 			"visible": true,
 			"opacity": 1
 		},
 		{
-			"name": "Karez main line",
-			"description": "This is the assumed path of the Naubad Karez, as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
-			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Akarez&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"name": "Taluka Boundary",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Ataluka&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
-			"visible": true,
-			"opacity": 1
-		},
-		{
-			"name": "Google Footprints",
-			"description": "Building footprints from Google Research",
-			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Agoogle-footprints&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
-			"type": "raster",
-			"visible": true,
-			"opacity": 1
-		},
-		{
-			"name": "annotation",
-			"description": "This is the assumed path of the Naubad Karez, as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
-			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Aannotations_polygons&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
-			"type": "raster",
+			"category": "reference",
+			"order": 2,
 			"visible": true,
 			"opacity": 1
 		},
@@ -43,21 +30,64 @@
 			"description": "Revenue maps from KGIS",
 			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Acadastral&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
+			"category": "reference",
+			"order": 3,
 			"visible": true,
 			"opacity": 1
 		},
 		{
-			"name": "Stepwells",
-			"description": "These are old wells and stepwells being mapped across Bidar District, our current focus is on Bidar City, Basavakalyan City and Aurad City",
-			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Astepwells&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"name": "Google Footprints",
+			"description": "Building footprints from Google Research",
+			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Agoogle-footprints&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
+			"category": "reference",
+			"order": 4,
 			"visible": true,
 			"opacity": 1
 		},
+
+				{
+			"name": "All Karez Lines",
+			"description": "Possible and Present Karez lines. Assumed paths of the Karezs', as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
+			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=stepwells%3Akarez_lines&outputFormat=application%2Fjson",
+			"type": "geojson",
+			"geometry_type": "line",
+			"category": "data",
+			"order": 7,
+			"icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cline x1='0' y1='6' x2='24' y2='6' stroke='%23ffffff' stroke-width='6'/%3E%3Cline x1='0' y1='6' x2='24' y2='6' stroke='%230000ff' stroke-width='2'/%3E%3C/svg%3E",
+			"color": "#000000",
+			"label": "name",
+			"visible": true,
+			"style": {
+				"line_casing": {
+					"line-color": "#ffffff",
+					"line-width": 6
+				},
+				"line": {
+					"line-color": "#0000ff",
+					"line-width": 2
+				},
+				"symbol": {
+					"text-color": "#000000",
+					"text-halo-color": "#ffffff",
+					"text-halo-width": 5,
+					"text-halo-blur": 2
+				},
+				"symbol_layout": {
+					"text-size": 14,
+					"symbol-placement": "line",
+					"text-rotation-alignment": "map"
+				}
+			}
+		},
+
 		{
-			"name": "Taluka Boundary",
-			"url": "https://geoserver.livinglabs.network/geoserver/stepwells/wms?service=WMS&version=1.1.0&request=GetMap&layers=stepwells%3Ataluka&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"name": "annotation",
+			"description": "Annotations and observations mapped on site",
+			"url": "https://geoserver.livinglabs.network/geoserver/index/wms?service=WMS&version=1.1.0&request=GetMap&layers=index%3Aannotations_polygons&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
 			"type": "raster",
+			"category": "data",
+			"order": 7,
 			"visible": true,
 			"opacity": 1
 		}

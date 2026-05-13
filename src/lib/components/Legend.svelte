@@ -16,8 +16,9 @@
 	function toggleNlayersVisibility(layer) {
 		if (map) {
 			const allLayers = map.getStyle().layers;
+			const prefix = layer.name + '_layer';
 			const nlayers = allLayers.filter((l) =>
-				l.id.toLowerCase().includes(layer.name.toLowerCase())
+				l.id === prefix || l.id.startsWith(prefix + '_')
 			);
 			nlayers.forEach((layer) => {
 				map.setLayoutProperty(

@@ -7,6 +7,7 @@
 	import { onMount, mount } from 'svelte';
 	import Legend from '$lib/components/Legend.svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 
 	import * as Drawer from '$lib/components/ui/drawer';
 	import { Button } from '$lib/components/ui/button';
@@ -418,6 +419,15 @@
 		});
 	});
 </script>
+
+<svelte:head>
+	<title>{data.content.name} — PGSL</title>
+	<meta name="description" content={data.content.short_desc} />
+	<meta property="og:title" content={data.content.name} />
+	<meta property="og:description" content={data.content.short_desc} />
+	<meta property="og:url" content={page.url.href} />
+	<meta property="og:type" content="website" />
+</svelte:head>
 
 <svelte:window bind:innerWidth={screenWidth} />
 

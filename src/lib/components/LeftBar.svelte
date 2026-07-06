@@ -38,14 +38,15 @@
 
 <div class="w-screen p-10 shadow-xl md:h-screen md:w-auto overflow-y-auto">
 	<header class="sticky top-0 bg-white ">
-	<h1 class="text-bold font-serif font-bold text-black md:text-3xl ">
-		the <span class="bg-pink-600 text-white px-2">Participatory Geospatial Lab</span> at Aruvu Collaboratory
+	<h1 class="text-bold font-serif font-bold text-black text-2xl md:text-3xl ">
+		the <span class="bg-pink-600 text-white px-2">Participatory Geospatial Lab</span> at  <a href="https://livinglabs.institute" target="_blank"
+			>Living Labs Institute</a
+		>
 	</h1>
 	<p class="text-md bold mt-4">
 		This website represents the work of <a href="https://aruvu.org" target="_blank"
 			>Aruvu Collaboratory</a
-		>, <a href="https://livinglabs.network" target="_blank">Living Labs Network and Forum</a>,
-		<a href="https://untold.town/team-yuvaa/" target="_blank">Team YUVAA</a>. The Collectives
+		>, <a href="https://livinglabs.network" target="_blank">Living Labs Network and Forum</a>, <a href="https://livinglabs.institute" target="_blank">Living Labs Institute</a>, <a href="https://untold.town/team-yuvaa/" target="_blank">Team YUVAA</a>. The Collectives
 		publish their work on the web at <a href="https://untold.town" target="_blank">Untold.Town</a>
 	</p>
 	</header>

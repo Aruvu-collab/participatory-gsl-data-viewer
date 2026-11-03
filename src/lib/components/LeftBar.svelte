@@ -3,10 +3,11 @@
 	import karez from '../contents/karez.json';
 	import alur from '../contents/alur-kundapura-infrastructure.json';
 	import wells from '../contents/wells-stepwells-bidar-district.json';
+	import crcGrasslands from '../contents/crc-bidar-grasslands.json';
 	import { onMount } from 'svelte';
 
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	let list: Array<any> = [karez, samagraArogya, wells, alur];
+	let list: Array<any> = [karez, samagraArogya, wells, alur, crcGrasslands];
 	let screenWidth: number = 0;
 	let pgslPosts: Array<any> = [];
 	let loading = true;

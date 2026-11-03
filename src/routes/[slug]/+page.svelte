@@ -22,19 +22,50 @@
 
 	const isMobile = $derived(screenWidth <= 768);
 
+	// MapLibre GeoJSON must be WGS84 lon/lat. GeoServer WFS returns the layer's
+	// native CRS (often EPSG:3857) unless srsName is given, so force it.
+	function ensureWgs84(url, name) {
+		if (/[?&]service=wfs/i.test(url) && !/[?&]srsName=/i.test(url)) {
+			console.warn(`Layer "${name}": WFS url has no srsName, requesting EPSG:4326`);
+			return url + (url.includes('?') ? '&' : '?') + 'srsName=EPSG:4326';
+		}
+		return url;
+	}
+
+	// [west, south, east, north] for any GeoJSON geometry
+	function geometryBbox(geom) {
+		let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
+		const walk = (c) => {
+			if (typeof c[0] === 'number') {
+				w = Math.min(w, c[0]); e = Math.max(e, c[0]);
+				s = Math.min(s, c[1]); n = Math.max(n, c[1]);
+			} else c.forEach(walk);
+		};
+		if (geom.type === 'GeometryCollection') geom.geometries.forEach((g) => walk(g.coordinates));
+		else walk(geom.coordinates);
+		return isFinite(w) ? [w, s, e, n] : null;
+	}
+
+	// Points anchor at the feature; lines/polygons at the click location
+	function popupAnchor(feature, lngLat) {
+		if (feature.geometry.type !== 'Point') return lngLat;
+		const c = feature.geometry.coordinates.slice();
+		while (Math.abs(lngLat.lng - c[0]) > 180) c[0] += lngLat.lng > c[0] ? 360 : -360;
+		return c;
+	}
+
 	// Function to update URL with current layer visibility
 	function updateLayersInUrl() {
 		if (!map) return;
 		
 		const visibleLayers = data.content.layers
 			.filter(layer => {
-				const layerId = layer.name + '_layer';
-				try {
-					const visibility = map.getLayoutProperty(layerId, 'visibility');
-					return visibility === 'visible';
-				} catch (e) {
-					return false;
-				}
+				const prefix = layer.name + '_layer';
+				return map.getStyle().layers.some(
+					(l) =>
+						(l.id === prefix || l.id.startsWith(prefix + '_')) &&
+						map.getLayoutProperty(l.id, 'visibility') !== 'none'
+				);
 			})
 			.map(layer => layer.name)
 			.join(',');
@@ -101,15 +132,6 @@
 			}, 500);
 		});
 
-		map.on('click', (e) => {
-			map.flyTo({
-				center: e.lngLat,
-				pitch: 10,
-				zoom: 18,
-				essential: true,
-				speed: 0.3
-			});
-		});
 		map.on('load', async () => {
 			// Add geolocation control
 			map.addControl(
@@ -144,18 +166,28 @@
 			);
 
 			// Add all configured layers, sorted by render order
-			const addedSources = new Set();
-			const sortedLayers = [...data.content.layers].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+			// Register every GeoJSON source up front, so layers that share a source
+			// work regardless of render order.
+			for (const layer of data.content.layers) {
+				if (layer.type !== 'geojson' || !layer.url) continue;
+				const sourceId = layer.source ?? layer.name;
+				if (!map.getSource(sourceId)) {
+					map.addSource(sourceId, { type: 'geojson', data: ensureWgs84(layer.url, layer.name) });
+				}
+			}
+
+			// Layers without an explicit order go on top (above basemaps/reference rasters)
+			const sortedLayers = [...data.content.layers].sort(
+				(a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)
+			);
 			sortedLayers.forEach((layer) => {
+			  try {
 				// Handle GeoJSON layers
 				if (layer.type === 'geojson') {
 					const sourceId = layer.source ?? layer.name;
-					if (!addedSources.has(sourceId) && layer.url) {
-						map.addSource(sourceId, {
-							type: 'geojson',
-							data: layer.url
-						});
-						addedSources.add(sourceId);
+					if (!map.getSource(sourceId)) {
+						console.warn(`Layer "${layer.name}" skipped: source "${sourceId}" has no url`);
+						return;
 					}
 
 					const color = layer.color ?? '#000000';
@@ -168,14 +200,14 @@
 							type: 'fill',
 							source: sourceId,
 							...(filterExpr && { filter: filterExpr }),
-							paint: layer.style?.fill ?? { 'fill-color': color }
+							paint: layer.style?.fill ?? { 'fill-color': color, 'fill-opacity': 0.4 }
 						});
 						map.addLayer({
 							id: layer.name + '_layer_line',
 							type: 'line',
 							source: sourceId,
 							...(filterExpr && { filter: filterExpr }),
-							paint: layer.style?.line ?? { 'line-color': color }
+							paint: layer.style?.line ?? { 'line-color': color, 'line-width': 2 }
 						});
 					} else if (geomType === 'line') {
 						if (layer.style?.line_casing) {
@@ -192,7 +224,7 @@
 							type: 'line',
 							source: sourceId,
 							...(filterExpr && { filter: filterExpr }),
-							paint: layer.style?.line ?? { 'line-color': color }
+							paint: layer.style?.line ?? { 'line-color': color, 'line-width': 2 }
 						});
 					} else if (layer.icon) {
 						map.addLayer({
@@ -233,7 +265,12 @@
 								'text-font': ['Open Sans Regular'],
 								'text-allow-overlap': false,
 								'text-ignore-placement': false,
-								...(layer.style?.symbol_layout ?? { 'text-size': 12, 'text-offset': [2, -2] })
+								...(layer.style?.symbol_layout ??
+									(geomType === 'polygon'
+										? { 'text-size': 12 }
+										: geomType === 'line'
+											? { 'text-size': 12, 'symbol-placement': 'line' }
+											: { 'text-size': 12, 'text-offset': [2, -2] }))
 							},
 							paint: layer.style?.symbol ?? {
 								'text-color': '#000',
@@ -244,14 +281,18 @@
 						});
 					}
 
-					const layerId = layer.name + '_layer_point';
+					// Make every geometry sub-layer that exists interactive
+					const interactiveIds = ['_layer_fill', '_layer_line', '_layer_point']
+						.map((s) => layer.name + s)
+						.filter((id) => map.getLayer(id));
+
+					interactiveIds.forEach((layerId) => {
 					map.on('mouseenter', layerId, () => {
 						map.getCanvas().style.cursor = 'help';
 					});
 
-					// Change it back to a pointer when it leaves.
 					map.on('mouseleave', layerId, () => {
-						map.getCanvas().style.cursor = 'pointer';
+						map.getCanvas().style.cursor = '';
 					});
 
 					map.on('click', layerId, (e) => {
@@ -289,27 +330,20 @@
 							sheet.querySelector('.bottom-sheet-content').appendChild(popupContainer);
 							requestAnimationFrame(() => sheet.classList.add('open'));
 						} else {
-							const coordinates = e.features[0].geometry.coordinates.slice();
-
-							// Ensure that if the map is zoomed out such that multiple
-							// copies of the feature are visible, the popup appears
-							// over the copy being pointed to.
-							while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-								coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-							}
-
-							// Use setDOMContent() instead of setHTML() for DOM elements
 							new maplibregl.Popup()
-								.setLngLat(coordinates)
-								.setDOMContent(popupContainer) // Changed from setHTML
+								.setLngLat(popupAnchor(e.features[0], e.lngLat))
+								.setDOMContent(popupContainer)
 								.addTo(map);
 						}
-						map.flyTo({
-							center: e.features[0].geometry.coordinates,
-							zoom: 15,
-							pitch: 30,
-							essential: true
-						});
+
+						const geom = e.features[0].geometry;
+						if (geom.type === 'Point') {
+							map.flyTo({ center: geom.coordinates, zoom: 15, pitch: 30, essential: true });
+						} else {
+							const bbox = geometryBbox(geom);
+							if (bbox) map.fitBounds(bbox, { padding: 60, maxZoom: 15 });
+						}
+					});
 					});
 				}
 				// Handle DEM
@@ -327,7 +361,7 @@
 
 					map.addControl(
 						new maplibregl.TerrainControl({
-							source: 'terrainSource',
+							source: layer.name,
 							exaggeration: 1
 						})
 					);
@@ -395,26 +429,16 @@
 					? urlLayers.split(',').includes(layer.name) 
 					: layer.visible;
 				
-				map.setLayoutProperty(
-					layer.name + '_layer',
-					'visibility',
-					shouldBeVisible ? 'visible' : 'none'
-				);
-				
-				// Also set visibility for other layer types (fill, line, point, label)
-				if (layer.type === 'geojson') {
-					['_layer_fill', '_layer_line_casing', '_layer_line', '_layer_point', '_layer_label'].forEach(suffix => {
-						try {
-							map.setLayoutProperty(
-								layer.name + suffix,
-								'visibility',
-								shouldBeVisible ? 'visible' : 'none'
-							);
-						} catch (e) {
-							// Layer might not exist (e.g., no label configured)
-						}
-					});
-				}
+				// Set visibility only on map layers that were actually created for this config layer
+				const prefix = layer.name + '_layer';
+				map.getStyle().layers
+					.filter((l) => l.id === prefix || l.id.startsWith(prefix + '_'))
+					.forEach((l) =>
+						map.setLayoutProperty(l.id, 'visibility', shouldBeVisible ? 'visible' : 'none')
+					);
+			  } catch (err) {
+				console.error(`Failed to add layer "${layer.name}":`, err);
+			  }
 			});
 		});
 	});

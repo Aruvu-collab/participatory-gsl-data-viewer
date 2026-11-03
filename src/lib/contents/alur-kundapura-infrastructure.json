@@ -4,7 +4,10 @@
 	"short_desc": "This is collaboratively produced by Living Labs Institute and the Alur Grama Panchayath, Kundapura Taluk of the Alur Panchayat's public infrastructure.",
 	"long_desc": "Through conversations with some of the members of both the Aluru and Harkuru VWSC, namely Rajesh Devadiga, Ravi Shetty, Prashanth Kulal and Prasanna Shetty, we listed the different water systems that concerns Aluru Panchayat.",
 	"zoom": 11,
-	"center": [74.726429, 13.754642],
+	"center": [
+		74.726429,
+		13.754642
+	],
 	"layers": [
 		{
 			"name": "Satellite Imagery",
@@ -58,7 +61,10 @@
 				},
 				"symbol_layout": {
 					"text-size": 12,
-					"text-offset": [2, -2]
+					"text-offset": [
+						2,
+						-2
+					]
 				}
 			}
 		},
@@ -93,8 +99,36 @@
 				},
 				"symbol_layout": {
 					"text-size": 12,
-					"text-offset": [2, -2]
+					"text-offset": [
+						2,
+						-2
+					]
 				}
+			}
+		},
+		{
+			"name": "Stories from Untold.Town",
+			"description": "Articles geotagged by the places they mention",
+			"type": "geojson",
+			"loader": "ghost",
+			"ghost": {
+				"url": "https://untold.town",
+				"key": "118485e791e69afcff3d060037",
+				"filter": "tag:kundapura"
+			},
+			"geometry_type": "point",
+			"thumbnails": {
+				"size": 48,
+				"border": "#ffffff",
+				"shape": "circle"
+			},
+			"label": "place",
+			"color": "#d8571a",
+			"category": "data",
+			"order": 5,
+			"visible": true,
+			"cards": {
+				"max": 5
 			}
 		}
 	]

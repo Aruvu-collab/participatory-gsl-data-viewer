@@ -85,6 +85,38 @@
 	{/if}
 {/key}
 
+{#if selectedFeature?.properties?.url && selectedFeature?.properties?.title}
+	{@const p = selectedFeature.properties}
+	<article class="flex w-full max-w-sm flex-col gap-2 bg-white">
+		{#if p.feature_image}
+			<img
+				src={p.feature_image}
+				alt={p.title}
+				class="h-40 w-full cursor-pointer rounded-md object-cover"
+				on:click={() => (lightboxSrc = p.feature_image)}
+			/>
+		{/if}
+		<!-- {#if p.place && p.place !== p.title}
+			<div class="text-xs font-medium tracking-wide text-gray-500 uppercase">{p.place}</div>
+		{/if} -->
+		<h2 class="text-base leading-snug font-semibold text-gray-900">{p.title}</h2>
+		{#if p.published_at}
+			<div class="text-xs text-gray-500">
+				{new Date(p.published_at).toLocaleDateString(undefined, {
+					year: 'numeric',
+					month: 'short',
+					day: 'numeric'
+				})}
+			</div>
+		{/if}
+		{#if p.excerpt}
+			<p class="line-clamp-3 text-sm text-gray-700">{p.excerpt}</p>
+		{/if}
+		<a href={p.url} target="_blank" rel="noopener" class="text-sm font-medium text-blue-700 hover:underline"
+			>Read on Untold.Town →</a
+		>
+	</article>
+{:else}
 <div class="mx-auto flex h-auto w-full flex-col overflow-y-scroll bg-white md:h-[40vh] md:w-[50vw]">
 	<div class="space-y-4">
 		<!-- Feature Title -->
@@ -157,6 +189,7 @@
 		</div>
 	</div>
 </div>
+{/if}
 
 <style>
 	:global {

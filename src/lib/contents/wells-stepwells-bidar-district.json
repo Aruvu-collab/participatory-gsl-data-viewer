@@ -187,6 +187,31 @@
 					"text-offset": [2, -2]
 				}
 			}
+		},
+		{
+			"name": "Stories from Untold.Town",
+			"description": "Articles geotagged by the places they mention",
+			"type": "geojson",
+			"loader": "ghost",
+			"ghost": {
+				"url": "https://untold.town",
+				"key": "118485e791e69afcff3d060037",
+				"filter": "tag:hyderabad-karnataka"
+			},
+			"geometry_type": "point",
+			"thumbnails": {
+				"size": 48,
+				"border": "#ffffff",
+				"shape": "circle"
+			},
+			"label": "place",
+			"color": "#d8571a",
+			"category": "data",
+			"order": 5,
+			"visible": true,
+			"cards": {
+				"max": 5
+			}
 		}
 	]
 }

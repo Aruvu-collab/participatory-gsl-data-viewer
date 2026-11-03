@@ -12,6 +12,7 @@
 	import * as Drawer from '$lib/components/ui/drawer';
 	import { Button } from '$lib/components/ui/button';
 	import MetadataView from '$lib/components/MetadataView.svelte';
+	import { loaders, addThumbnailImages, enableStoryCards } from '$lib/loaders/ghost';
 	import { Dialog } from 'bits-ui';
 
 	let { data } = $props();
@@ -168,11 +169,28 @@
 			// Add all configured layers, sorted by render order
 			// Register every GeoJSON source up front, so layers that share a source
 			// work regardless of render order.
+			// Loader layers (e.g. "loader": "ghost") build their GeoJSON in the browser; run in parallel
+			const loaded = new Map();
+			await Promise.all(
+				data.content.layers
+					.filter((l) => l.type === 'geojson' && l.loader)
+					.map(async (layer) => {
+						const load = loaders[layer.loader];
+						if (!load) return console.warn(`Layer "${layer.name}": unknown loader "${layer.loader}"`);
+						let fc = await load(layer[layer.loader] ?? {});
+						if (layer.thumbnails) fc = await addThumbnailImages(map, layer.name, fc, layer.thumbnails);
+						loaded.set(layer.name, fc);
+					})
+			);
+
 			for (const layer of data.content.layers) {
-				if (layer.type !== 'geojson' || !layer.url) continue;
+				if (layer.type !== 'geojson' || (!layer.url && !loaded.has(layer.name))) continue;
 				const sourceId = layer.source ?? layer.name;
 				if (!map.getSource(sourceId)) {
-					map.addSource(sourceId, { type: 'geojson', data: ensureWgs84(layer.url, layer.name) });
+					map.addSource(sourceId, {
+						type: 'geojson',
+						data: loaded.get(layer.name) ?? ensureWgs84(layer.url, layer.name)
+					});
 				}
 			}
 
@@ -234,6 +252,32 @@
 							...(filterExpr && { filter: filterExpr }),
 							paint: layer.style?.line ?? { 'line-color': color, 'line-width': 2 }
 						});
+					} else if (layer.thumbnails) {
+						// Fallback circles for features without a loaded thumbnail
+						map.addLayer({
+							id: layer.name + '_layer_point',
+							type: 'circle',
+							source: sourceId,
+							filter: filterExpr
+								? ['all', ['!', ['has', 'thumb']], filterExpr]
+								: ['!', ['has', 'thumb']],
+							paint: layer.style?.circle ?? {
+								'circle-color': color,
+								'circle-radius': 6,
+								'circle-stroke-width': 2,
+								'circle-stroke-color': '#ffffff'
+							}
+						});
+						map.addLayer({
+							id: layer.name + '_layer_thumb',
+							type: 'symbol',
+							source: sourceId,
+							filter: filterExpr ? ['all', ['has', 'thumb'], filterExpr] : ['has', 'thumb'],
+							layout: {
+								'icon-image': ['get', 'thumb'],
+								'icon-allow-overlap': true
+							}
+						});
 					} else if (layer.icon) {
 						map.addLayer({
 							id: layer.name + '_layer_point',
@@ -261,7 +305,7 @@
 						});
 					}
 
-					['_layer_fill', '_layer_line', '_layer_point']
+					['_layer_fill', '_layer_line', '_layer_point', '_layer_thumb']
 						.map((s) => layer.name + s)
 						.filter((id) => map.getLayer(id))
 						.forEach((id) => interactiveIds.push(id));
@@ -284,7 +328,13 @@
 										? { 'text-size': 12 }
 										: geomType === 'line'
 											? { 'text-size': 12, 'symbol-placement': 'line' }
-											: { 'text-size': 12, 'text-offset': [2, -2] }))
+											: layer.thumbnails
+												? {
+														'text-size': 12,
+														'text-anchor': 'top',
+														'text-offset': [0, ((layer.thumbnails.size ?? 48) / 2 + 4) / 12]
+													}
+												: { 'text-size': 12, 'text-offset': [2, -2] }))
 							},
 							paint: layer.style?.symbol ?? {
 								'text-color': '#000',
@@ -445,6 +495,11 @@
 					.forEach((l) =>
 						map.setLayoutProperty(l.id, 'visibility', shouldBeVisible ? 'visible' : 'none')
 					);
+
+				// Always-open article cards ("cards": { "max": 5 }) for loader layers
+				if (layer.cards && loaded.has(layer.name)) {
+					enableStoryCards(map, maplibregl.Popup, layer.name, loaded.get(layer.name), layer.cards);
+				}
 			  } catch (err) {
 				console.error(`Failed to add layer "${layer.name}":`, err);
 			  }

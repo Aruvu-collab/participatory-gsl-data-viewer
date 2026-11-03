@@ -4,7 +4,10 @@
 	"short_desc": "The Climate Resource Center is a local hub to access tools and resources to tackle climate challenges through education, and collaborative actions focused on Agrarian practices, Grassland Ecosystems and Water systems and Infrastructures. ",
 	"long_desc": "",
 	"zoom": 9,
-	"center": [77.470926,18.015825],
+	"center": [
+		77.470926,
+		18.015825
+	],
 	"layers": [
 		{
 			"name": "Satellite Imagery",
@@ -13,7 +16,7 @@
 			"attribution": "Satellite Imagery Powered by ESRI",
 			"category": "basemap",
 			"order": 1,
-			"visible": true,
+			"visible": false,
 			"opacity": 1
 		},
 		{
@@ -22,7 +25,7 @@
 			"type": "raster",
 			"category": "reference",
 			"order": 2,
-			"visible": false,
+			"visible": true,
 			"opacity": 1
 		},
 		{
@@ -35,27 +38,59 @@
 			"visible": false,
 			"opacity": 1
 		},
-
-
 		{
 			"name": "Grassland_Patches",
 			"description": "Possible and Present Karez lines. Assumed paths of the Karezs', as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
 			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=grasslands%3Agrasslands-polygons&outputFormat=application%2Fjson&maxFeatures=1000&srsName=EPSG:4326",
 			"type": "geojson",
-			"geometry_type": "polygon",
 			"order": 10,
 			"visible": true,
-			"label": "text"		
-		},
+			"geometry_type": "polygon",
+			"label": "text",
+			"layers_spec": [
 				{
+					"type": "fill",
+					"paint": {
+						"fill-color": "#2e7d32",
+						"fill-opacity": 0.15
+					}
+				},
+				{
+					"type": "line",
+					"paint": {
+						"line-color": "#ffffff",
+						"line-width": 4
+					}
+				},
+				{
+					"type": "line",
+					"paint": {
+						"line-color": "#2e7d32",
+						"line-width": 2
+					}
+				}
+			]
+		},
+		{
 			"name": "Grassland_Locations",
 			"description": "Possible and Present Karez lines. Assumed paths of the Karezs', as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
 			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=grasslands%3Agrassland-points&outputFormat=application%2Fjson&maxFeatures=1000&srsName=EPSG:4326",
 			"type": "geojson",
-			"geometry_type": "point",
 			"order": 10,
 			"visible": true,
-			"label": "text"		
+			"geometry_type": "point",
+			"label": "text",
+			"layers_spec": [
+				{
+					"type": "circle",
+					"paint": {
+						"circle-color": "#71a02b",
+						"circle-radius": 5,
+						"circle-stroke-width": 2,
+						"circle-stroke-color": "#ffffff"
+					}
+				}
+			]
 		}
 	]
 }

@@ -190,10 +190,26 @@
 						return;
 					}
 
-					const color = layer.color ?? '#000000';
-					const geomType = layer.geometry_type;
+					const interactiveIds = [];
 					const filterExpr = layer.filter ?? undefined;
+					const color = layer.color ?? '#000000';
+					// Also picks the default label placement when layers_spec is used
+					const geomType = layer.geometry_type;
 
+					if (layer.layers_spec) {
+						// Override for the geometry: MapLibre layer objects from the config,
+						// added in order. id and source are filled in here; a layer-level
+						// `filter` applies to every entry that doesn't set its own.
+						// `label` below is still added alongside.
+						layer.layers_spec.forEach((spec, i) => {
+							const id = `${layer.name}_layer_${i}`;
+							const filter = spec.filter ?? filterExpr;
+							map.addLayer({ ...spec, id, source: sourceId, ...(filter && { filter }) });
+							// Text-only symbol layers (labels) are not clickable
+							if (spec.type !== 'symbol' || spec.layout?.['icon-image']) interactiveIds.push(id);
+						});
+					} else {
+					// Default: build layers from geometry_type / color / style
 					if (geomType === 'polygon') {
 						map.addLayer({
 							id: layer.name + '_layer_fill',
@@ -210,15 +226,7 @@
 							paint: layer.style?.line ?? { 'line-color': color, 'line-width': 2 }
 						});
 					} else if (geomType === 'line') {
-						if (layer.style?.line_casing) {
-							map.addLayer({
-								id: layer.name + '_layer_line_casing',
-								type: 'line',
-								source: sourceId,
-								...(filterExpr && { filter: filterExpr }),
-								paint: layer.style.line_casing
-							});
-						}
+						// Multi-layer lines (e.g. casing) belong in layers_spec
 						map.addLayer({
 							id: layer.name + '_layer_line',
 							type: 'line',
@@ -253,7 +261,13 @@
 						});
 					}
 
-					// Add labels if configured
+					['_layer_fill', '_layer_line', '_layer_point']
+						.map((s) => layer.name + s)
+						.filter((id) => map.getLayer(id))
+						.forEach((id) => interactiveIds.push(id));
+					}
+
+					// Labels: added for both the default and layers_spec paths
 					if (layer.label) {
 						map.addLayer({
 							id: layer.name + '_layer_label',
@@ -280,11 +294,6 @@
 							}
 						});
 					}
-
-					// Make every geometry sub-layer that exists interactive
-					const interactiveIds = ['_layer_fill', '_layer_line', '_layer_point']
-						.map((s) => layer.name + s)
-						.filter((id) => map.getLayer(id));
 
 					interactiveIds.forEach((layerId) => {
 					map.on('mouseenter', layerId, () => {

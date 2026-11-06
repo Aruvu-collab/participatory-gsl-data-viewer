@@ -9,25 +9,47 @@
 		basemap: 'Basemap'
 	};
 
+	// One legend row per layer, except layers sharing a legend_group, which
+	// collapse into a single row that toggles all its members together.
+	function toRows(layers: any[]) {
+		const rows: any[] = [];
+		const groups = new Map();
+		for (const l of layers) {
+			if (!l.legend_group) {
+				rows.push({ ...l, members: [l] });
+				continue;
+			}
+			let row = groups.get(l.legend_group);
+			if (!row) {
+				row = { ...l, name: l.legend_group, members: [] };
+				groups.set(l.legend_group, row);
+				rows.push(row);
+			}
+			row.members.push(l);
+			row.visible = row.members.some((m: any) => m.visible);
+		}
+		return rows;
+	}
+
 	$: categories = CATEGORY_ORDER
-		.map((id) => ({ id, layers: data.content.layers.filter((l: any) => (l.category ?? 'data') === id) }))
+		.map((id) => ({
+			id,
+			// a group is placed in the category of its first member
+			layers: toRows(data.content.layers).filter((r) => (r.category ?? 'data') === id)
+		}))
 		.filter((g) => g.layers.length > 0);
 
-	function toggleNlayersVisibility(layer) {
-		if (map) {
-			const allLayers = map.getStyle().layers;
-			const prefix = layer.name + '_layer';
-			const nlayers = allLayers.filter((l) =>
-				l.id === prefix || l.id.startsWith(prefix + '_')
-			);
-			nlayers.forEach((layer) => {
-				map.setLayoutProperty(
-					layer.id,
-					'visibility',
-					map.getLayoutProperty(layer.id, 'visibility') == 'none' ? 'visible' : 'none'
-				);
-			});
+	function setRowVisibility(row: any, visible: boolean) {
+		if (!map) return;
+		const allLayers = map.getStyle().layers;
+		for (const member of row.members) {
+			member.visible = visible;
+			const prefix = member.name + '_layer';
+			allLayers
+				.filter((l: any) => l.id === prefix || l.id.startsWith(prefix + '_'))
+				.forEach((l: any) => map.setLayoutProperty(l.id, 'visibility', visible ? 'visible' : 'none'));
 		}
+		data = data; // recompute rows (keeps desktop and drawer legends in sync)
 	}
 </script>
 
@@ -70,8 +92,8 @@
 					<input
 						type="checkbox"
 						id={layer.name}
-						bind:checked={layer.visible}
-						onchange={() => toggleNlayersVisibility(layer)}
+						checked={layer.visible}
+						onchange={(e) => setRowVisibility(layer, e.currentTarget.checked)}
 						aria-checked={layer.visible}
 						class="shrink-0"
 					/>

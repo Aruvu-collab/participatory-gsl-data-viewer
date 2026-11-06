@@ -10,15 +10,9 @@
 	],
 	"layers": [
 		{
-			"name": "Satellite Imagery",
-			"description": "ESRI Satellite Imagery",
-			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-			"type": "raster",
-			"attribution": "Satellite Imagery Powered by ESRI",
-			"category": "basemap",
+			"preset": "satellite-roads",
 			"order": 1,
-			"visible": true,
-			"opacity": 1
+			"visible": true
 		},
 		{
 			"name": "Alur Gram Panchayath",

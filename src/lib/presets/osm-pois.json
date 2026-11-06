@@ -1,0 +1,284 @@
+{
+	"name": "OSM_Points_of_Interest",
+	"description": "Points of interest from OpenStreetMap (VersaTiles, Shortbread schema). Visible from zoom 14.",
+	"url": "https://tiles.versatiles.org/tiles/osm/{z}/{x}/{y}",
+	"source": "versatiles",
+	"scheme": "xyz",
+	"maxzoom": 14,
+	"type": "vector",
+	"category": "reference",
+	"order": 7,
+	"visible": true,
+	"hover": [
+		"name",
+		"amenity",
+		"shop",
+		"tourism",
+		"leisure",
+		"historic",
+		"man_made",
+		"religion"
+	],
+	"sprite": {
+		"id": "base",
+		"url": "https://tiles.versatiles.org/assets/sprites/base"
+	},
+	"layers_spec": [
+		{
+			"type": "symbol",
+			"source-layer": "pois",
+			"layout": {
+				"icon-image": [
+					"case",
+					[
+						"has",
+						"amenity"
+					],
+					[
+						"match",
+						[
+							"get",
+							"amenity"
+						],
+						"clinic",
+						"base:icon-doctor",
+						"university",
+						"base:icon-college",
+						"atm",
+						"base:icon-atm",
+						"bank",
+						"base:icon-bank",
+						"cafe",
+						"base:icon-cafe",
+						"college",
+						"base:icon-college",
+						"community_centre",
+						"base:icon-community",
+						"dentist",
+						"base:icon-dentist",
+						"doctors",
+						"base:icon-doctor",
+						"drinking_water",
+						"base:icon-drinking_water",
+						"fast_food",
+						"base:icon-fast_food",
+						"fire_station",
+						"base:icon-fire_station",
+						"fuel",
+						"base:icon-fuel_pump",
+						"grave_yard",
+						"base:icon-cemetery",
+						"hospital",
+						"base:icon-hospital",
+						"library",
+						"base:icon-library",
+						"marketplace",
+						"base:icon-marketplace",
+						"pharmacy",
+						"base:icon-pill",
+						"place_of_worship",
+						[
+							"match",
+							[
+								"get",
+								"religion"
+							],
+							"christian",
+							"base:icon-latin_cross",
+							"muslim",
+							"base:icon-star_and_crescent",
+							"jewish",
+							"base:icon-star_of_david",
+							"buddhist",
+							"base:icon-dharma_wheel",
+							"hindu",
+							"base:icon-om",
+							"sikh",
+							"base:icon-khanda",
+							"taoist",
+							"base:icon-yin_yang",
+							"base:icon-person_kneeling_and_praying"
+						],
+						"police",
+						"base:icon-police_officer",
+						"post_office",
+						"base:icon-post",
+						"restaurant",
+						"base:icon-restaurant",
+						"school",
+						"base:icon-school",
+						"shelter",
+						"base:icon-shelter",
+						"toilets",
+						"base:icon-restrooms",
+						"townhall",
+						"base:icon-town_hall",
+						"veterinary",
+						"base:icon-veterinary",
+						"base:transport-information"
+					],
+					[
+						"has",
+						"shop"
+					],
+					[
+						"match",
+						[
+							"get",
+							"shop"
+						],
+						"bakery",
+						"base:icon-bakery",
+						"clothes",
+						"base:icon-clothes",
+						"general",
+						"base:icon-shop",
+						"greengrocer",
+						"base:icon-greengrocer",
+						"hardware",
+						"base:icon-hardware",
+						"base:icon-shop"
+					],
+					[
+						"has",
+						"tourism"
+					],
+					[
+						"match",
+						[
+							"get",
+							"tourism"
+						],
+						"camp_site",
+						"base:icon-campsite",
+						"guest_house",
+						"base:icon-lodging",
+						"hotel",
+						"base:icon-lodging",
+						"information",
+						"base:transport-information",
+						"picnic_site",
+						"base:icon-picnic_site",
+						"viewpoint",
+						"base:icon-viewpoint",
+						"base:transport-information"
+					],
+					[
+						"has",
+						"leisure"
+					],
+					[
+						"match",
+						[
+							"get",
+							"leisure"
+						],
+						"pitch",
+						"base:icon-pitch",
+						"playground",
+						"base:icon-seesaw",
+						"stadium",
+						"base:icon-stadium",
+						"swimming_pool",
+						"base:icon-swimming",
+						"base:icon-sports"
+					],
+					[
+						"has",
+						"historic"
+					],
+					[
+						"match",
+						[
+							"get",
+							"historic"
+						],
+						"castle",
+						"base:icon-castle",
+						"monument",
+						"base:icon-monument",
+						"wayside_shrine",
+						"base:icon-shrine",
+						"base:icon-historic"
+					],
+					[
+						"has",
+						"man_made"
+					],
+					[
+						"match",
+						[
+							"get",
+							"man_made"
+						],
+						"wastewater_plant",
+						"base:icon-wastewater",
+						"water_well",
+						"base:icon-drinking_water",
+						"water_works",
+						"base:icon-waterworks",
+						"tower",
+						"base:icon-observation_tower",
+						"watermill",
+						"base:icon-watermill",
+						"windmill",
+						"base:icon-windmill",
+						"base:transport-information"
+					],
+					""
+				],
+				"icon-size": [
+					"interpolate",
+					[
+						"linear"
+					],
+					[
+						"zoom"
+					],
+					14,
+					0.55,
+					18,
+					1
+				],
+				"icon-allow-overlap": false,
+				"text-field": [
+					"step",
+					[
+						"zoom"
+					],
+					"",
+					15,
+					[
+						"coalesce",
+						[
+							"get",
+							"name_en"
+						],
+						[
+							"get",
+							"name"
+						]
+					]
+				],
+				"text-font": [
+					"Open Sans Regular"
+				],
+				"text-size": 11,
+				"text-anchor": "top",
+				"text-offset": [
+					0,
+					1.1
+				],
+				"text-optional": true
+			},
+			"paint": {
+				"icon-color": "#000000",
+				"icon-halo-color": "#ffffff",
+				"icon-halo-width": 1.5,
+				"text-color": "#000000",
+				"text-halo-color": "#ffffff",
+				"text-halo-width": 1.5
+			}
+		}
+	]
+}

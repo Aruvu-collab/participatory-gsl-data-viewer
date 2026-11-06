@@ -10,14 +10,9 @@
 	],
 	"layers": [
 		{
-			"name": "Satellite Imagery",
-			"url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-			"type": "raster",
-			"attribution": "Satellite Imagery Powered by ESRI",
-			"category": "basemap",
+			"preset": "satellite-roads",
 			"order": 1,
-			"visible": false,
-			"opacity": 1
+			"visible": true
 		},
 		{
 			"name": "Taluka Boundary",
@@ -27,6 +22,9 @@
 			"order": 2,
 			"visible": true,
 			"opacity": 1
+		},
+		{
+			"preset": "osm-pois"
 		},
 		{
 			"name": "Cadastral",
@@ -43,7 +41,7 @@
 			"description": "Possible and Present Karez lines. Assumed paths of the Karezs', as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
 			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=grasslands%3Agrasslands-polygons&outputFormat=application%2Fjson&maxFeatures=1000&srsName=EPSG:4326",
 			"type": "geojson",
-			"order": 10,
+			"order":12,
 			"visible": true,
 			"geometry_type": "polygon",
 			"label": "text",
@@ -76,7 +74,7 @@
 			"description": "Possible and Present Karez lines. Assumed paths of the Karezs', as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
 			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=grasslands%3Agrassland-points&outputFormat=application%2Fjson&maxFeatures=1000&srsName=EPSG:4326",
 			"type": "geojson",
-			"order": 10,
+			"order": 12,
 			"visible": true,
 			"geometry_type": "point",
 			"label": "text",
@@ -111,10 +109,10 @@
 			"label": "place",
 			"color": "#d8571a",
 			"category": "data",
-			"order": 5,
+			"order": 11,
 			"visible": true,
 			"cards": {
-				"max": 5
+				"max": 2
 			}
 		}
 	]

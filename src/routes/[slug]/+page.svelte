@@ -444,13 +444,54 @@
 				}
 				// Handle vector layers
 				else if (layer.type === 'vector') {
-					map.addSource(layer.name, {
-						type: 'vector',
-						tiles: [layer.url],
-						scheme: 'tms'
-					});
+					// A .json url is a TileJSON (e.g. VersaTiles Shortbread); otherwise a tile template
+					// Layers with the same "source" share one tile source (tiles fetched once)
+					const vectorSourceId = layer.source ?? layer.name;
+					if (!map.getSource(vectorSourceId)) map.addSource(vectorSourceId, layer.url.split('?')[0].endsWith('.json')
+						? { type: 'vector', url: layer.url }
+						: {
+								type: 'vector',
+								tiles: [layer.url],
+								scheme: layer.scheme ?? 'tms',
+								// lets MapLibre overzoom past the source's last tile level
+								...(layer.maxzoom != null && { maxzoom: layer.maxzoom })
+							});
 
-					if (layer.layer_names && Array.isArray(layer.layer_names)) {
+					// "sprite": { "id": "base", "url": "..." } adds an icon set, used as "base:icon-name"
+					if (layer.sprite && !map.getSprite().some((s) => s.id === layer.sprite.id)) {
+						map.addSprite(layer.sprite.id, layer.sprite.url);
+					}
+
+					if (layer.layers_spec) {
+						// MapLibre layer objects from the config; each sets its own source-layer
+						const ids = layer.layers_spec.map((spec, i) => {
+							const id = `${layer.name}_layer_${i}`;
+							map.addLayer({ ...spec, id, source: vectorSourceId });
+							return id;
+						});
+
+						// "hover": "kind" shows that feature property in a tooltip
+						if (layer.hover) {
+							const tip = new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'hover-tip' });
+							map.on('mousemove', ids, (e) => {
+								const f = e.features?.[0];
+								// "hover" is one property name or a list; shows those that are set
+								const value = [layer.hover].flat()
+									.map((k) => f?.properties?.[k])
+									.filter((v) => v != null && v !== '')
+									.join(' · ');
+								if (!value) return tip.remove();
+								map.getCanvas().style.cursor = 'pointer';
+								tip.setLngLat(e.lngLat)
+									.setText(`${f.sourceLayer.replace(/_/g, ' ')}: ${String(value).replace(/_/g, ' ')}`)
+									.addTo(map);
+							});
+							map.on('mouseleave', ids, () => {
+								map.getCanvas().style.cursor = '';
+								tip.remove();
+							});
+						}
+					} else if (layer.layer_names && Array.isArray(layer.layer_names)) {
 						layer.layer_names.forEach((source_layer) => {
 							map.addLayer({
 								id: layer.name + '_layer_' + source_layer,
@@ -484,8 +525,13 @@
 					}
 				}
 
-				const shouldBeVisible = urlLayers 
-					? urlLayers.split(',').includes(layer.name) 
+				// Grouped layers (legend_group) show if the group or any member is listed
+				const urlNames = urlLayers?.split(',');
+				const groupMembers = layer.legend_group
+					? data.content.layers.filter((l) => l.legend_group === layer.legend_group).map((l) => l.name)
+					: [layer.name];
+				const shouldBeVisible = urlNames
+					? urlNames.includes(layer.legend_group) || groupMembers.some((n) => urlNames.includes(n))
 					: layer.visible;
 				
 				// Set visibility only on map layers that were actually created for this config layer

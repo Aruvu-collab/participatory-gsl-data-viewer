@@ -35,8 +35,7 @@
 		},
 		{
 			"preset": "bidar-contours",
-			"order": 12,
-			"visible": true
+			"order": 12
 		},
 		{
 			"name": "Google Footprints",

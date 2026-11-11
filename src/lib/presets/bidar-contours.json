@@ -5,6 +5,7 @@
 	"type": "vector",
 	"scheme": "tms",
 	"maxzoom": 14,
+	"visible":false,
 	"category": "reference",
 	"icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 8 Q6 2 12 6 T24 4' fill='none' stroke='%23a0522d' stroke-width='1.5'/%3E%3C/svg%3E",
 	"layers_spec": [

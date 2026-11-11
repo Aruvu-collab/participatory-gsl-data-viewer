@@ -1,0 +1,80 @@
+{
+	"name": "Contours",
+	"description": "Elevation contours",
+	"url": "https://geoserver.livinglabs.network/geoserver/gwc/service/tms/1.0.0/stepwells:contours@EPSG:3857@pbf/{z}/{x}/{y}.pbf",
+	"type": "vector",
+	"scheme": "tms",
+	"maxzoom": 14,
+	"category": "reference",
+	"icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 8 Q6 2 12 6 T24 4' fill='none' stroke='%23a0522d' stroke-width='1.5'/%3E%3C/svg%3E",
+	"layers_spec": [
+		{
+			"type": "line",
+			"source-layer": "contours",
+			"paint": {
+				"line-color": "#ffffff",
+				"line-opacity": 1,
+				"line-width": [
+					"interpolate",
+					[
+						"linear"
+					],
+					[
+						"zoom"
+					],
+					10,
+					1.4,
+					16,
+					2.9
+				]
+			}
+		},
+		{
+			"type": "line",
+			"source-layer": "contours",
+			"paint": {
+				"line-color": "#a0522d",
+				"line-opacity": 0.7,
+				"line-width": [
+					"interpolate",
+					[
+						"linear"
+					],
+					[
+						"zoom"
+					],
+					10,
+					0.4,
+					16,
+					1.8
+				]
+			}
+		},
+		{
+			"type": "symbol",
+			"source-layer": "contours",
+			"minzoom": 12,
+			"layout": {
+				"symbol-placement": "line",
+				"symbol-spacing": 300,
+				"text-field": [
+					"to-string",
+					[
+						"get",
+						"ELEV"
+					]
+				],
+				"text-font": [
+					"Open Sans Regular"
+				],
+				"text-size": 9,
+				"text-max-angle": 30
+			},
+			"paint": {
+				"text-color": "#7a3e1d",
+				"text-halo-color": "#ffffff",
+				"text-halo-width": 1
+			}
+		}
+	]
+}

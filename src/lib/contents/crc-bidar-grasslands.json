@@ -37,11 +37,16 @@
 			"opacity": 1
 		},
 		{
+			"preset": "bidar-contours",
+			"order": 12,
+			"visible": true
+		},
+		{
 			"name": "Grassland_Patches",
 			"description": "Possible and Present Karez lines. Assumed paths of the Karezs', as the actual path has not been mapped. This is extrapolated from the locations of the known vents",
 			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=grasslands%3Agrasslands-polygons&outputFormat=application%2Fjson&maxFeatures=1000&srsName=EPSG:4326",
 			"type": "geojson",
-			"order":12,
+			"order": 12,
 			"visible": true,
 			"geometry_type": "polygon",
 			"label": "text",

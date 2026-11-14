@@ -69,7 +69,13 @@
 		if (draw) return draw;
 		draw = new TerraDraw({
 			adapter: new TerraDrawMapLibreGLAdapter({ map }),
-			modes: [new TerraDrawPointMode(), new TerraDrawLineStringMode(), new TerraDrawPolygonMode()]
+			// pointerDistance (px) controls how close a click must be to an existing vertex
+			// to snap/close onto it; TerraDraw's default of 40 is too aggressive for small features.
+			modes: [
+				new TerraDrawPointMode(),
+				new TerraDrawLineStringMode({ pointerDistance: 12 }),
+				new TerraDrawPolygonMode({ pointerDistance: 12 })
+			]
 		});
 		draw.start();
 		draw.on('finish', (id) => {

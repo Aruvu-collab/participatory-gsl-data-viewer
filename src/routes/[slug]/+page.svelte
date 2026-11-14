@@ -101,7 +101,7 @@
 			center: urlLng && urlLat ? [parseFloat(urlLng), parseFloat(urlLat)] : data.content.center,
 			pitch: urlPitch ? parseFloat(urlPitch) : 0,
 			bearing: urlBearing ? parseFloat(urlBearing) : 0,
-			maxZoom: 17,
+			maxZoom: 19,
 			minZoom: 7,
 			canvasContextAttributes: {
 				antialias: false, // Disable antialiasing for better performance

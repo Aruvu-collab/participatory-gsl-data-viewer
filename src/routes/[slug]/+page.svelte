@@ -14,10 +14,13 @@
 	import MetadataView from '$lib/components/MetadataView.svelte';
 	import { loaders, addThumbnailImages, enableStoryCards } from '$lib/loaders/ghost';
 	import { Dialog } from 'bits-ui';
+	import ContributeMode from '$lib/components/ContributeMode.svelte';
+	import { contributing } from '$lib/contribute/state.svelte';
 
 	let { data } = $props();
 	let screenWidth = $state(0);
 	let selectedFeature = $state(null);
+	let mapReady = $state(false);
 	let mapContainer;
 	let map;
 
@@ -319,7 +322,7 @@
 							source: sourceId,
 							...(filterExpr && { filter: filterExpr }),
 							layout: {
-								'text-field': ['get', layer.label],
+								'text-field': Array.isArray(layer.label) ? layer.label : ['get', layer.label], // property name or expression
 								'text-font': ['Open Sans Regular'],
 								'text-allow-overlap': false,
 								'text-ignore-placement': false,
@@ -355,6 +358,8 @@
 					});
 
 					map.on('click', layerId, (e) => {
+						// While contributing, map taps belong to the drawing tool
+						if (contributing.active) return;
 						if (e.features.length === 0) return;
 						selectedFeature = e.features[0];
 
@@ -365,7 +370,7 @@
 						// Mount the Svelte component to the container
 						const popupContent = mount(MetadataView, {
 							target: popupContainer,
-							props: { selectedFeature: selectedFeature }
+							props: { selectedFeature: selectedFeature, popup: layer.popup ?? null }
 						});
 
 						if (isMobile) {
@@ -550,6 +555,7 @@
 				console.error(`Failed to add layer "${layer.name}":`, err);
 			  }
 			});
+			mapReady = true;
 		});
 	});
 </script>
@@ -601,6 +607,10 @@
 
 	<section id="map" class="col-span-12 h-screen md:col-span-9" bind:this={mapContainer}></section>
 </div>
+
+{#if mapReady && data.content.contribute?.enabled && data.content.contribute.taxonomyData}
+	<ContributeMode {map} config={data.content.contribute} slug={data.slug} />
+{/if}
 
 <style lang="postcss">
 	@reference "tailwindcss";

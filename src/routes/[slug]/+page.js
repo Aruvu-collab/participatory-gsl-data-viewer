@@ -3,6 +3,9 @@
 // page's own fields taking precedence. A preset with a "layers" array is a
 // bundle: it expands into several layers, and the page's fields (e.g.
 // "visible") are applied to each of them; "order" shifts the bundle as a whole.
+import { loadTaxonomy } from '$lib/contribute/load';
+import { applyTaxonomyStyle } from '$lib/contribute/style';
+
 const presets = import.meta.glob('../../lib/presets/*.json', { import: 'default' });
 
 async function expandPreset(layer) {
@@ -35,6 +38,18 @@ export const load = async ({ params }) => {
 	const file = await import(`../../lib/contents/${params.slug}.json`);
 	const content = JSON.parse(JSON.stringify(file));
 	content.layers = (await Promise.all(content.layers.map(expandPreset))).flat();
+	// "contribute": { "taxonomy": "<name>" } loads src/lib/contents/taxonomies/<name>.json
+	if (content.contribute?.enabled && content.contribute.taxonomy) {
+		const taxonomy = await loadTaxonomy(content.contribute.taxonomy);
+		if (taxonomy) {
+			content.contribute.taxonomyData = taxonomy;
+			// Layers with "taxonomy_style" get colours, labels, legend and popup names from the taxonomy
+			content.layers = content.layers.map((/** @type {any} */ l) => applyTaxonomyStyle(l, taxonomy));
+		} else {
+			console.warn(`Unknown taxonomy "${content.contribute.taxonomy}", contributions disabled`);
+			content.contribute.enabled = false;
+		}
+	}
 	return {
 		slug: params.slug,
 		content

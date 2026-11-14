@@ -39,6 +39,15 @@
 		}))
 		.filter((g) => g.layers.length > 0);
 
+	// Colour key under a row (e.g. classes from taxonomy_style). For a group,
+	// members' entries are merged and repeated labels shown once.
+	function legendItems(row: any): { label: string; color: string }[] {
+		const seen = new Set<string>();
+		return row.members
+			.flatMap((m: any) => m.legend_items ?? [])
+			.filter((i: any) => !seen.has(i.label) && seen.add(i.label));
+	}
+
 	function setRowVisibility(row: any, visible: boolean) {
 		if (!map) return;
 		const allLayers = map.getStyle().layers;
@@ -81,6 +90,19 @@
 						<span class="{isBasemap ? 'text-xs text-neutral-500' : 'text-sm font-medium'}">{layer.name}</span>
 						{#if !isBasemap && layer.description}
 							<p class="truncate text-xs text-neutral-600">{layer.description}</p>
+						{/if}
+						{#if !isBasemap && legendItems(layer).length > 0}
+							<ul class="mt-1 grid gap-0.5">
+								{#each legendItems(layer) as item}
+									<li class="flex items-center gap-1.5 text-xs text-neutral-700">
+										<span
+											class="inline-block h-2.5 w-2.5 shrink-0 rounded-sm border border-white/70"
+											style="background-color: {item.color}"
+										></span>
+										{item.label}
+									</li>
+								{/each}
+							</ul>
 						{/if}
 						{#if layer.export_url}
 							<div class="text-xs">

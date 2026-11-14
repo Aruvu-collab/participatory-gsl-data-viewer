@@ -2053,6 +2053,16 @@ tar@^7.4.3:
     mkdirp "^3.0.1"
     yallist "^5.0.0"
 
+terra-draw-maplibre-gl-adapter@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/terra-draw-maplibre-gl-adapter/-/terra-draw-maplibre-gl-adapter-1.5.0.tgz#9e4ff638119785f3c582673102fb8c4f667ef652"
+  integrity sha512-wUv7WDIKln+cWkJOJZ68cOLwFhcBXlSN3GF56Dx8GLnmTTnQEZbIyzWRHjsxhn+TOXvxBOlCDl5JmCghIW3L4g==
+
+terra-draw@1.38.0:
+  version "1.38.0"
+  resolved "https://registry.yarnpkg.com/terra-draw/-/terra-draw-1.38.0.tgz#46a482191cfb29b97ba46555a5cb1e619a6790c7"
+  integrity sha512-h7bD5/mIN/t1qNKmPLqwZvsHnwtZpvFWo49PGA3n7CzM28lyc/xcMl85xWNOMBgF0Tq20UT06+KlBJ7g7B24rg==
+
 tinyqueue@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/tinyqueue/-/tinyqueue-3.0.0.tgz"

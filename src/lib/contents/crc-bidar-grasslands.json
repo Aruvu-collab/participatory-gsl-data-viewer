@@ -118,6 +118,63 @@
 			"cards": {
 				"max": 2
 			}
+		},
+		{
+			"name": "Contributed_Areas",
+			"description": "Open natural ecosystem features mapped by community contributors and approved by the project team.",
+			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&maxFeatures=5000&srsName=EPSG:4326&CQL_FILTER=project%3D%27crc-bidar-grasslands%27&typeName=grasslands%3Aone_approved_patches",
+			"type": "geojson",
+			"order": 13,
+			"visible": true,
+			"category": "data",
+			"legend_group": "Community contributions",
+			"geometry_type": "polygon",
+			"taxonomy_style": "area"
+		},
+		{
+			"name": "Contributed_Lines",
+			"description": "Open natural ecosystem features mapped by community contributors and approved by the project team.",
+			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&maxFeatures=5000&srsName=EPSG:4326&CQL_FILTER=project%3D%27crc-bidar-grasslands%27&typeName=grasslands%3Aone_approved_lines",
+			"type": "geojson",
+			"order": 14,
+			"visible": true,
+			"category": "data",
+			"legend_group": "Community contributions",
+			"geometry_type": "line",
+			"taxonomy_style": "line"
+		},
+		{
+			"name": "Contributed_Points",
+			"description": "Open natural ecosystem features mapped by community contributors and approved by the project team.",
+			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&maxFeatures=5000&srsName=EPSG:4326&CQL_FILTER=project%3D%27crc-bidar-grasslands%27&typeName=grasslands%3Aone_approved_points",
+			"type": "geojson",
+			"order": 15,
+			"visible": true,
+			"category": "data",
+			"legend_group": "Community contributions",
+			"geometry_type": "point",
+			"taxonomy_style": "point"
+		},
+		{
+			"name": "Contributions_Pending",
+			"description": "New contributions waiting for review by the project team.",
+			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&maxFeatures=5000&srsName=EPSG:4326&CQL_FILTER=project%3D%27crc-bidar-grasslands%27&typeName=grasslands%3Aone_pending_public",
+			"type": "geojson",
+			"order": 16,
+			"visible": true,
+			"category": "data",
+			"taxonomy_style": "pending"
 		}
-	]
+	],
+	"contribute": {
+		"enabled": true,
+		"taxonomy": "one-grasslands",
+		"bounds": [
+			76.7,
+			17.5,
+			77.8,
+			18.5
+		],
+		"pending_layer": "Contributions_Pending"
+	}
 }

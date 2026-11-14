@@ -1,6 +1,10 @@
 <!-- PropertiesPanel.svelte -->
 <script>
 	export let selectedFeature = null;
+	// Optional per-layer popup config (e.g. from taxonomy_style):
+	// { hide: [keys], labels: { key: 'Label' }, values: { key: { code: 'Label' } } }
+	/** @type {any} */
+	export let popup = null;
 	import { Dialog } from 'bits-ui';
 	// Separate image and non-image properties
 	$: imageProperties = selectedFeature
@@ -20,20 +24,43 @@
 						!key.toLowerCase().includes('picture') &&
 						value !== null &&
 						value !== '' &&
-						!key.startsWith('_')
+						!key.startsWith('_') &&
+						!popup?.hide?.includes(key)
 				)
-				.sort(([a], [b]) => a.localeCompare(b))
+				.sort(popup?.labels ? byPopupOrder : ([a], [b]) => a.localeCompare(b))
 		: [];
+	// With a popup config, labelled keys come first in the order they are listed
+	/** @param {[string, any]} x @param {[string, any]} y */
+	function byPopupOrder([a], [b]) {
+		const keys = Object.keys(popup.labels);
+		const ia = keys.indexOf(a), ib = keys.indexOf(b);
+		return (ia < 0 ? Infinity : ia) - (ib < 0 ? Infinity : ib) || a.localeCompare(b);
+	}
+	/** @param {string} key */
 	function formatKey(key) {
+		if (popup?.labels?.[key]) return popup.labels[key];
 		return key.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 	}
-	function formatValue(value) {
+	/** @param {any} value @param {string} [key] */
+	function formatValue(value, key) {
+		const mapped = key != null ? popup?.values?.[key]?.[value] : undefined;
+		if (mapped != null) return mapped;
 		if (typeof value === 'number') {
 			return value % 1 === 0 ? value.toString() : value.toFixed(4);
+		}
+		// ISO timestamps (e.g. submitted_at) as a readable date, only for configured popups
+		if (popup && typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value)) {
+			const d = new Date(value);
+			if (!isNaN(d.getTime()))
+				return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 		}
 		return value;
 	}
 	function getName(properties) {
+		if (popup) {
+			const p = selectedFeature?.properties ?? {};
+			return p.local_name || formatValue(p.subtype, 'subtype') || formatValue(p.one_class, 'one_class') || 'Contribution';
+		}
 		let name_well = '';
 		try {
 			name_well = nonImageProperties.find((e = properties) =>
@@ -179,7 +206,7 @@
 									{formatKey(key)}
 								</div>
 								<div class="min-w-0 text-right text-sm break-words text-gray-900">
-									{formatValue(value)}
+									{formatValue(value, key)}
 								</div>
 							</div>
 						{/each}

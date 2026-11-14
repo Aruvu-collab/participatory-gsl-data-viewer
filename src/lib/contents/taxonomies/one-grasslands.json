@@ -1,0 +1,134 @@
+{
+	"name": "Open Natural Ecosystems — Bidar",
+	"source": "Glossary of 'Mapping Open Natural Ecosystems in Bidar' (Karwaan, untold.town, Nov 2025), mapped to OSM tags",
+	"states": {
+		"remnant": "Remnant / intact",
+		"regenerating": "Regenerating",
+		"degraded": "Degraded",
+		"transitional": "Transitional / changing use"
+	},
+	"classes": {
+		"grassland_scrub": {
+			"label": "Grasslands & open scrub",
+			"color": "#7cb342",
+			"geoms": ["polygon", "line", "point"],
+			"subtypes": {
+				"native_remnant": { "label": "Remnant native grassland", "osm": { "natural": "grassland", "grassland": "native_remnant" } },
+				"savanna": { "label": "Thorn savanna", "osm": { "natural": "grassland", "grassland": "savanna" } },
+				"fallow_regen": { "label": "Fallow reverting to grass / shrub", "osm": { "landuse": "farmland", "fallow": "yes", "grassland": "fallow_regen" } },
+				"strip": { "label": "Grass strip (road / bund edge)", "osm": { "landuse": "grass", "grassland": "strip" } },
+				"laterite": { "label": "Grass on laterite", "osm": { "natural": "grassland", "grassland": "laterite", "surface": "rock" } },
+				"scrub_patch": { "label": "Scrub patch / scrub line on bund", "osm": { "natural": "scrub" } }
+			}
+		},
+		"commons": {
+			"label": "Commons & grazing grounds",
+			"color": "#c0a000",
+			"geoms": ["polygon", "line", "point"],
+			"subtypes": {
+				"gomal": { "label": "Gomal (village commons)", "osm": { "landuse": "meadow", "meadow": "pasture", "ownership": "communal", "local_name:kn": "gomala" } },
+				"livestock_corridor": { "label": "Livestock corridor", "osm": { "highway": "track", "access": "livestock", "one:feature": "livestock_corridor" } },
+				"penning": { "label": "Seasonal penning site", "osm": { "landuse": "animal_keeping", "seasonal": "yes", "one:feature": "penning" } }
+			}
+		},
+		"ecotone": {
+			"label": "Wet–dry ecotones",
+			"color": "#26a69a",
+			"geoms": ["polygon", "line"],
+			"subtypes": {
+				"drawdown": { "label": "Tank drawdown zone", "osm": { "natural": "wetland", "wetland": "wet_meadow", "seasonal": "yes", "one:feature": "drawdown" } },
+				"grass_swale": { "label": "Monsoon grass swale", "osm": { "natural": "wetland", "wetland": "wet_meadow", "intermittent": "yes", "grassland": "seasonal_wet" } },
+				"seasonal_wet": { "label": "Seasonal wet grassland", "osm": { "natural": "wetland", "wetland": "wet_meadow", "seasonal": "yes", "grassland": "seasonal_wet" } }
+			}
+		},
+		"rock_laterite": {
+			"label": "Rocky outcrops & lateritic plateaus",
+			"color": "#a1887f",
+			"geoms": ["polygon", "line", "point"],
+			"subtypes": {
+				"rock_sheet": { "label": "Exposed rock sheet", "osm": { "natural": "bare_rock" } },
+				"laterite_cap": { "label": "Laterite cap / plateau", "osm": { "natural": "bare_rock", "geological": "laterite" } },
+				"escarpment": { "label": "Escarpment", "osm": { "natural": "cliff" } },
+				"boulder_field": { "label": "Boulder field", "osm": { "natural": "scree" } }
+			}
+		},
+		"hydrology": {
+			"label": "Water & hydrology",
+			"color": "#1e88e5",
+			"geoms": ["polygon", "line", "point"],
+			"subtypes": {
+				"kere": { "label": "Kere (tank)", "osm": { "natural": "water", "water": "reservoir", "local_name:kn": "kere" } },
+				"hallah": { "label": "Hallah (seasonal drainage line)", "osm": { "waterway": "stream", "intermittent": "yes", "local_name": "halla" } },
+				"riparian": { "label": "Riparian vegetation", "osm": { "natural": "scrub", "one:feature": "riparian" } },
+				"spring": { "label": "Spring / seep", "osm": { "natural": "spring" } },
+				"stepwell": { "label": "Stepwell (baoli)", "osm": { "man_made": "water_well", "historic": "yes", "one:local_term": "baoli" } },
+				"rock_pool": { "label": "Rock pool", "osm": { "natural": "water", "water": "pond", "intermittent": "yes" } },
+				"farm_pond": { "label": "Farm / livestock pond", "osm": { "natural": "water", "water": "pond" } }
+			}
+		},
+		"tof": {
+			"label": "Tree cover outside forests",
+			"color": "#2e7d32",
+			"geoms": ["polygon", "line", "point"],
+			"subtypes": {
+				"windbreak": { "label": "Windbreak / avenue trees", "osm": { "natural": "tree_row" } },
+				"orchard": { "label": "Orchard / agroforestry", "osm": { "landuse": "orchard" } },
+				"woodlot": { "label": "Community woodlot", "osm": { "natural": "wood", "ownership": "communal" } }
+			}
+		},
+		"agri_mosaic": {
+			"label": "Agricultural–natural mosaics",
+			"color": "#d4a373",
+			"geoms": ["polygon", "line"],
+			"subtypes": {
+				"natural_edge": { "label": "Rainfed field with natural edges", "osm": { "landuse": "farmland", "one:feature": "natural_edge" } },
+				"vegetated_bund": { "label": "Vegetated bund", "osm": { "barrier": "hedge", "one:feature": "bund" } },
+				"hedgerow": { "label": "Hedgerow", "osm": { "barrier": "hedge" } }
+			}
+		},
+		"erosion": {
+			"label": "Soil & erosion patches",
+			"color": "#8d6e63",
+			"geoms": ["polygon", "line", "point"],
+			"subtypes": {
+				"gully": { "label": "Gully / rill", "osm": { "natural": "gully" } },
+				"eroded": { "label": "Severely eroded terrain", "osm": { "natural": "bare_rock", "one:state": "degraded" } },
+				"siltation": { "label": "Sediment entering tank", "osm": { "one:feature": "siltation" } }
+			}
+		},
+		"linear": {
+			"label": "Linear natural features",
+			"color": "#5c6bc0",
+			"geoms": ["line", "polygon"],
+			"subtypes": {
+				"canal_bank": { "label": "Vegetated canal bank", "osm": { "landuse": "grass", "one:feature": "canal_bank" } },
+				"greenway": { "label": "Greenway under power line / railway", "osm": { "landuse": "grass", "one:feature": "greenway" } }
+			}
+		},
+		"degraded": {
+			"label": "Degraded or transitional land",
+			"color": "#e53935",
+			"geoms": ["polygon", "point"],
+			"subtypes": {
+				"cleared_scrub": { "label": "Recently cleared scrub", "osm": { "landuse": "brownfield" } },
+				"gliricidia": { "label": "Invasive Gliricidia thicket", "osm": { "natural": "scrub", "species": "Gliricidia sepium", "invasive": "yes" } },
+				"fire_scrub": { "label": "Fire-affected scrub", "osm": { "natural": "scrub", "fire": "yes" } },
+				"quarry": { "label": "Abandoned quarry", "osm": { "landuse": "quarry", "disused": "yes" } },
+				"dump": { "label": "Dump site", "osm": { "landuse": "landfill" } },
+				"degraded_tank_bed": { "label": "Degraded tank bed", "osm": { "natural": "wetland", "one:state": "degraded" } }
+			}
+		},
+		"cultural": {
+			"label": "Cultural ecological nodes",
+			"color": "#8e24aa",
+			"geoms": ["point", "polygon"],
+			"subtypes": {
+				"kalyani": { "label": "Sacred tank / kalyani / kund", "osm": { "natural": "water", "water": "basin", "local_name": "kalyani" } },
+				"sacred_grove": { "label": "Sacred grove / temple hill", "osm": { "natural": "wood", "sacred_grove": "yes" } },
+				"dargah_trees": { "label": "Dargah trees (khirni)", "osm": { "natural": "tree", "species": "Manilkara hexandra" } },
+				"graveyard": { "label": "Graveyard", "osm": { "landuse": "cemetery" } },
+				"fort_vegetation": { "label": "Fort vegetation", "osm": { "historic": "fort", "natural": "scrub" } }
+			}
+		}
+	}
+}

@@ -39,7 +39,16 @@ export function labelExpr(taxonomy: Taxonomy) {
 	];
 }
 
-export function popupConfig(taxonomy: Taxonomy) {
+// Fields every popup lists, in order, even when blank ("Not recorded").
+// The pending view publishes fewer columns, so it gets its own list.
+const POPUP_FIELDS: Record<TaxonomyStyle, string[]> = {
+	area: ['one_class', 'subtype', 'one_state', 'local_name', 'author_name', 'notes', 'submitted_at'],
+	line: ['one_class', 'subtype', 'one_state', 'local_name', 'author_name', 'notes', 'submitted_at'],
+	point: ['one_class', 'subtype', 'one_state', 'local_name', 'author_name', 'notes', 'submitted_at'],
+	pending: ['layer', 'one_class', 'subtype', 'author_name', 'notes', 'submitted_at']
+};
+
+export function popupConfig(taxonomy: Taxonomy, style?: TaxonomyStyle) {
 	const classes: Record<string, string> = {};
 	const subtypes: Record<string, string> = {};
 	for (const [ck, c] of Object.entries(taxonomy.classes)) {
@@ -47,13 +56,17 @@ export function popupConfig(taxonomy: Taxonomy) {
 		for (const [sk, s] of Object.entries(c.subtypes ?? {})) subtypes[sk] = s.label;
 	}
 	return {
+		// "tags" (JSON) is not shown raw; its OSM tags are listed separately via `tags`
 		hide: ['tags', 'project', 'id'],
+		tags: 'tags',
+		fields: style ? POPUP_FIELDS[style] : [],
 		labels: {
 			one_class: 'Class',
 			subtype: 'Type',
 			one_state: 'State',
 			local_name: 'Local name',
 			author_name: 'Mapped by',
+			notes: 'Notes',
 			submitted_at: 'Submitted',
 			layer: 'Geometry'
 		},
@@ -154,6 +167,6 @@ export function applyTaxonomyStyle(layer: any, taxonomy: Taxonomy | undefined | 
 			}
 		}),
 		legend_items: layer.legend_items ?? legendItems,
-		popup: layer.popup ?? popupConfig(taxonomy)
+		popup: layer.popup ?? popupConfig(taxonomy, style)
 	};
 }

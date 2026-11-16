@@ -43,6 +43,23 @@ export interface SubmissionInput {
 	website?: string | null; // honeypot
 }
 
+/** Result of /api/contribute/token (PostgREST /rpc/token_session): an invite code's details */
+export interface TokenInfo {
+	valid: boolean;
+	reason: string | null;
+	label?: string;
+	expires_at?: string | null;
+	uses?: number;
+	max_uses?: number | null;
+	allowed_layers?: string[] | null;
+	/** people editing with this code right now (open tabs seen in the last 75 s, including yours) */
+	live?: number;
+	/** submissions made with this code, and how many are pending / approved */
+	edits?: number;
+	pending?: number;
+	approved?: number;
+}
+
 /** Arguments for PostgREST /rpc/submit (p_project is added by the server) */
 export interface SubmitPayload {
 	p_token: string;

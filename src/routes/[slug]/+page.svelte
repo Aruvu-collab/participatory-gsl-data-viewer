@@ -144,14 +144,16 @@
 						enableHighAccuracy: true
 					},
 					trackUserLocation: true
-				})
+				}),
+				'bottom-right'
 			);
 			map.addControl(
 				new maplibregl.NavigationControl({
 					visualizePitch: true,
 					showZoom: true,
 					showCompass: true
-				})
+				}),
+				'bottom-right'
 			);
 
 			// Pre-load SVG icons before adding layers
@@ -382,7 +384,7 @@
 									s.className = 'bottom-sheet';
 									s.innerHTML = `
                                                     <div class="bottom-sheet-handle"></div>
-                                                    <button class="bottom-sheet-close">×</button>
+                                                    <button type="button" class="bottom-sheet-close" aria-label="Close details"><span aria-hidden="true">×</span></button>
                                                     <div class="bottom-sheet-content"></div>
                                                   `;
 									document.body.appendChild(s);
@@ -427,7 +429,8 @@
 						new maplibregl.TerrainControl({
 							source: layer.name,
 							exaggeration: 1
-						})
+						}),
+						'bottom-right'
 					);
 				}
 				// Handle raster layers
@@ -577,8 +580,9 @@
 
 	</section> -->
 	{#if screenWidth > 768}
-		<section class="col-span-3 md:max-h-screen">
-			<div class="col-span-2">
+		<!-- Sidebar turns blueprint-blue while editing -->
+		<section class="col-span-3 flex flex-col md:h-screen md:max-h-screen" class:blueprint={contributing.active}>
+			<div class="flex min-h-0 flex-1 flex-col">
 				<Legend bind:data bind:map />
 			</div>
 		</section>
@@ -597,8 +601,12 @@
 			{/if}
 
 			<Drawer.Root>
-				<Drawer.Trigger class="w-full rounded-sm bg-gray-100 p-2">Legend ↑</Drawer.Trigger>
-				<Drawer.Content class="bg-gray-200 max-h-[70svh] flex flex-col overflow-hidden">
+				<Drawer.Trigger class="w-full rounded-sm bg-gray-100 p-2 {contributing.active ? 'blueprint' : ''}"
+					>Legend ↑</Drawer.Trigger
+				>
+				<Drawer.Content
+					class="bg-gray-200 max-h-[70svh] flex flex-col overflow-hidden {contributing.active ? 'blueprint' : ''}"
+				>
 					<Legend bind:data bind:map />
 				</Drawer.Content>
 			</Drawer.Root>

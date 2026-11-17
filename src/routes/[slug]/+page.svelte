@@ -194,6 +194,7 @@
 				if (!map.getSource(sourceId)) {
 					map.addSource(sourceId, {
 						type: 'geojson',
+						...(layer.attribution && { attribution: layer.attribution }),
 						data: loaded.get(layer.name) ?? ensureWgs84(layer.url, layer.name)
 					});
 				}
@@ -417,7 +418,8 @@
 					map.addSource(layer.name, {
 						type: 'raster-dem',
 						tiles: [layer.url],
-						tileSize: 256
+						tileSize: 256,
+						...(layer.attribution && { attribution: layer.attribution })
 					});
 
 					map.setTerrain({
@@ -438,7 +440,8 @@
 					map.addSource(layer.name, {
 						type: 'raster',
 						tiles: [layer.url],
-						tileSize: 256
+						tileSize: 256,
+						...(layer.attribution && { attribution: layer.attribution })
 					});
 
 					map.addLayer({
@@ -456,10 +459,11 @@
 					// Layers with the same "source" share one tile source (tiles fetched once)
 					const vectorSourceId = layer.source ?? layer.name;
 					if (!map.getSource(vectorSourceId)) map.addSource(vectorSourceId, layer.url.split('?')[0].endsWith('.json')
-						? { type: 'vector', url: layer.url }
+						? { type: 'vector', url: layer.url, ...(layer.attribution && { attribution: layer.attribution }) }
 						: {
 								type: 'vector',
 								tiles: [layer.url],
+								...(layer.attribution && { attribution: layer.attribution }),
 								scheme: layer.scheme ?? 'tms',
 								// lets MapLibre overzoom past the source's last tile level
 								...(layer.maxzoom != null && { maxzoom: layer.maxzoom })

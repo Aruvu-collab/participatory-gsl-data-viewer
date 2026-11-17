@@ -37,6 +37,23 @@
 			"opacity": 1
 		},
 		{
+			"name": "ONE_Probability",
+			"description": "Modelled probability that an area is an Open Natural Ecosystem (ONE), ",
+			"url": "https://geoserver.livinglabs.network/geoserver/grasslands/wms?service=WMS&version=1.1.0&request=GetMap&layers=grasslands%3Ahk_india_one&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE",
+			"attribution": "Madhusudan, M. D., & Vanak, A. T. (2023). Mapping the distribution and extent of India's semi-arid open natural ecosystems. ATREE",
+			"type": "raster",
+			"category": "data",
+			"order": 4,
+			"visible": true,
+			"opacity": 0.9,
+			"legend_items": [
+				{ "label": "0–35% · not considered ONE", "color": "#e8e8e8" },
+				{ "label": "35–50% · not considered ONE", "color": "#bdbdbd" },
+				{ "label": "50–67% · considered ONE", "color": "#e6a64c" },
+				{ "label": "67–100% · considered ONE", "color": "#a0522d" }
+			]
+		},
+		{
 			"preset": "bidar-contours",
 			"order": 12
 		},
